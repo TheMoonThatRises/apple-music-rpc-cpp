@@ -47,6 +47,11 @@ class JSON {
   template<typename T>
   T as() const;
 
+  template<typename T>
+  bool is() const;
+
+  void push_back(const JSON& item);
+
   std::string to_string() const;
   static JSON from_string(const std::string& json);
 };

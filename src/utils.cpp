@@ -8,6 +8,8 @@
 #include <unistd.h>
 
 #include <string>
+#include <vector>
+#include <regex>
 
 #include "include/utils.hpp"
 
@@ -24,4 +26,12 @@ std::string find_discord_ipc_file() {
   }
 
   return "";
+}
+
+std::string unescape_string(const std::string& input) {
+  return std::regex_replace(input, std::regex("\\\""), "\"");
+}
+
+std::string escape_string(const std::string& input) {
+  return std::regex_replace(input, std::regex("\""), "\\\"");
 }
