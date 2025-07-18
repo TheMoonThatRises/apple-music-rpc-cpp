@@ -1,0 +1,20 @@
+name: cpplint
+
+on: [push]
+
+jobs:
+  cpplint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up brew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Install cppcheck
+        run: brew install cpplint
+
+      - name: Run cpplint
+        run: ./scripts/cpplint.sh
