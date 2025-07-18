@@ -1,6 +1,16 @@
 name: cpplint
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - stable
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '**.txt'
+      - 'scripts/**'
+      - '!scripts/cpplint.sh'
 
 jobs:
   cpplint:

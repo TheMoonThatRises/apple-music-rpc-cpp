@@ -1,6 +1,17 @@
 name: cppcheck
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - stable
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '**.txt'
+      - '!suppressions.txt'
+      - 'scripts/**'
+      - '!scripts/cppcheck.sh'
 
 jobs:
   cppcheck:

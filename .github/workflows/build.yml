@@ -1,6 +1,16 @@
 name: build
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - stable
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '**.txt'
+      - '!CMakeLists.txt'
+      - 'scripts/**'
 
 jobs:
   build:
@@ -10,5 +20,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install CMake
+        run: brew install cmake
+
       - name: Build project
         uses: threeal/cmake-action@v2.1.0
+        with:
+          cxx-compiler: clang++
