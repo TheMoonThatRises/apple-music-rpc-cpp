@@ -15,7 +15,8 @@
 
 int main() {
   std::string discord_ipc_file = find_discord_ipc_file();
-  std::string music_client_id = "773825528921849856";
+  // std::string music_client_id = "773825528921849856";  // apple music
+  std::string music_client_id = "1313374141960949831";  // spwifiy
 
   JSON::JSONObject handshake_json = {
     {"v", JSON(1)},
@@ -27,9 +28,21 @@ int main() {
 
   ClientConnection client(discord_ipc_file);
 
-  client.connect();
+  bool ret = client.connect();
 
-  client.send_data(0, handshake_data);
+  if (!ret) {
+    std::cout << "failed to connect to socket" << std::endl;
+
+    return 1;
+  }
+
+  ret = client.send_data(0, handshake_data);
+
+  if (!ret) {
+    std::cout << "failed to send packet data" << std::endl;
+
+    return 1;
+  }
 
   std::string data = client.recv_data();
   JSON recv_json = JSON::from_string(data);
