@@ -59,7 +59,6 @@ void DiscordIPCClient::recv_thread() {
         break;
       case IPCOpcodes::frame:
         break;
-      }
       case IPCOpcodes::close:
         close();
 
