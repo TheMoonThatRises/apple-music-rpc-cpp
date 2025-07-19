@@ -10,14 +10,17 @@
 
 #include <map>
 #include <string>
+#include <sstream>
 #include <variant>
 #include <vector>
 
-class JSON {
- public:
-  using JSONObject = std::map<std::string, JSON>;
-  using JSONArray = std::vector<JSON>;
+namespace json {
+class JSON;
 
+typedef std::map<std::string, JSON> JSONObject;
+typedef std::vector<JSON> JSONArray;
+
+class JSON {
  private:
   using JSONValue = std::variant<
     std::nullptr_t,
@@ -30,6 +33,9 @@ class JSON {
   >;
 
   JSONValue _value;
+
+ private:
+  void stringify(std::ostream& os) const;
 
  public:
   JSON();
@@ -53,7 +59,7 @@ class JSON {
   void push_back(const JSON& item);
 
   std::string to_string() const;
-  static JSON from_string(const std::string& json);
 };
+}  // namespace json
 
 #endif  // APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_JSON_HPP_

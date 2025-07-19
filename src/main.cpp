@@ -11,14 +11,20 @@
 
 #include "include/client_connection.hpp"
 #include "include/json.hpp"
+#include "include/parser.hpp"
 #include "include/utils.hpp"
+
+using utils::find_discord_ipc_file;
+using json::JSON;
+using json::JSONObject;
+using json::Parser;
 
 int main() {
   std::string discord_ipc_file = find_discord_ipc_file();
   // std::string music_client_id = "773825528921849856";  // apple music
   std::string music_client_id = "1313374141960949831";  // spwifiy
 
-  JSON::JSONObject handshake_json = {
+  JSONObject handshake_json = {
     {"v", JSON(1)},
     {"client_id", JSON(music_client_id)}
   };
@@ -45,7 +51,7 @@ int main() {
   }
 
   std::string data = client.recv_data();
-  JSON recv_json = JSON::from_string(data);
+  JSON recv_json = Parser::parse(data);
 
   std::cout << data << std::endl;
   std::cout << recv_json.to_string() << std::endl;

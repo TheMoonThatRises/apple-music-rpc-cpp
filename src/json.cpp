@@ -5,15 +5,18 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <algorithm>
 #include <format>
 #include <string>
+#include <sstream>
 #include <variant>
 #include <vector>
 
 #include "include/json.hpp"
 #include "include/utils.hpp"
 
+using utils::escape_string;
+
+namespace json {
 JSON::JSON() : _value(JSONObject{}) {}
 
 JSON::JSON(std::nullptr_t value) : _value(value) {}
@@ -50,159 +53,58 @@ void JSON::push_back(const JSON& item) {
   std::get<JSONArray>(_value).push_back(item);
 }
 
-std::string JSON::to_string() const {
-  std::string base;
-
+void JSON::stringify(std::ostream& os) const {
   if (is<JSONObject>()) {
     JSONObject object = as<JSONObject>();
+    bool first_item = true;
 
-    base = "{";
+    os << "{";
 
-    for (auto it = object.begin(); it != object.end(); ++it) {
-      base += std::format(
-        "\"{}\":{}", escape_string(it->first), it->second.to_string());
-
-      if (std::next(it) != object.end()) {
-        base += ",";
+    for (const auto& [key, value] : object) {
+      if (!first_item) {
+        os << ",";
+      } else {
+        first_item = false;
       }
+
+      os << "\"" << escape_string(key) << "\":";
+      value.stringify(os);
     }
 
-    base += "}";
+    os <<"}";
   } else if (is<JSONArray>()) {
     JSONArray array = as<JSONArray>();
+    bool first_item = true;
 
-    base = "[";
+    os << "[";
 
-    for (size_t i = 0; i < array.size(); ++i) {
-      base += array[i].to_string();
-
-      if (i < array.size() - 1) {
-        base += ",";
+    for (const auto& item : array) {
+      if (!first_item) {
+        os << ",";
+      } else {
+        first_item = false;
       }
+
+      item.stringify(os);
     }
 
-    base += "]";
+    os << "]";
   } else if (is<std::string>()) {
-    base = std::format("\"{}\"", escape_string(as<std::string>()));
+    os << "\"" << escape_string(as<std::string>()) << "\"";
   } else if (is<int>()) {
-    base = std::to_string(as<int>());
+    os << std::to_string(as<int>());
   } else if (is<double>()) {
-    base = std::to_string(as<double>());
+    os << std::to_string(as<double>());
   } else if (is<bool>()) {
-    base = as<bool>() ? "true" : "false";
+    os << (as<bool>() ? "true" : "false");
   } else if (is<std::nullptr_t>()) {
-    base = "null";
+    os << "null";
   }
-
-  return base;
 }
 
-JSON JSON::from_string(const std::string& json) {
-  JSON base;
-  size_t pos = 0;
-
-  if (json[0] == '{') {
-    base = JSON(JSON::JSONObject{});
-  } else {
-    base = JSON(JSON::JSONArray{});
-  }
-
-  ++pos;
-
-  while (pos < json.length() - 1) {
-    JSON tmp;
-    std::string key;
-
-    std::string search_str = json.substr(pos);
-
-    if (base.is<JSONObject>()) {
-      size_t colon_idx = search_str.find(':');
-      key = unescape_string(search_str.substr(1, colon_idx - 2));
-
-      pos += colon_idx + 1;
-      search_str = json.substr(pos);
-    }
-
-    char search_item = json[pos];
-
-    switch (search_item) {
-      case '{':
-      case '[': {
-        char end_item = search_item == '{' ? '}' : ']';
-        size_t start_counts = 0, end_counts = 0;
-        size_t end_idx = 0;
-
-        for (; end_idx < search_str.length(); ++end_idx) {
-          if (search_str[end_idx] == search_item) {
-            ++start_counts;
-          } else if (search_str[end_idx] ==  end_item) {
-            ++end_counts;
-          }
-
-          if (start_counts == end_counts) {
-            break;
-          }
-        }
-
-        ++end_idx;
-
-        tmp = from_string(search_str.substr(0, end_idx));
-
-        pos += end_idx;
-
-        if (json[pos] == ',') {
-          ++pos;
-        }
-
-        break;
-      }
-      default: {
-        size_t end_comma = search_str.find_first_of(',');
-        std::string match_item = search_str;
-
-        if (end_comma != std::string::npos) {
-          match_item.erase(end_comma);
-        } else {
-          match_item.pop_back();
-        }
-
-        switch (search_item) {
-          case '"': {
-            tmp = JSON(
-              unescape_string(match_item.substr(1, match_item.length() - 2)));
-
-            break;
-          }
-          case 'n': {
-            tmp = JSON(nullptr);
-
-            break;
-          }
-          case 't':
-          case 'f': {
-            tmp = JSON(match_item == "true" ? true : false);
-
-            break;
-          }
-          default: {
-            if (match_item.find('.') == std::string::npos) {
-              tmp = JSON(stoi(match_item));
-            } else {
-              tmp = JSON(stod(match_item));
-            }
-          }
-        }
-
-        pos += match_item.length() + 1;
-      }
-    }
-
-    if (base.is<JSONObject>()) {
-      base[key] = tmp;
-    } else {
-      base.push_back(tmp);
-    }
-  }
-
-  return base;
+std::string JSON::to_string() const {
+  std::stringstream os;
+  stringify(os);
+  return os.str();
 }
+}  // namespace json
