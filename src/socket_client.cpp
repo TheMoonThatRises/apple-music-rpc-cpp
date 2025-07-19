@@ -5,30 +5,17 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <poll.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #include <string>
+#include <optional>
 #include <vector>
 
 #include "include/socket_client.hpp"
 
 namespace websockets {
-std::vector<char> SocketClient::encode_packet(
-  int op,
-  const std::string& data
-) {
-  int data_len = data.size();
-
-  std::vector<char> packet(8 + data_len);
-
-  std::memcpy(&packet[0], &op, 4);
-  std::memcpy(&packet[4], &data_len, 4);
-  std::memcpy(&packet[8], data.data(), data_len);
-
-  return packet;
-}
-
 SocketClient::SocketClient(
   const std::string& socket_file)
 : _socket_file(socket_file) {
@@ -43,6 +30,9 @@ SocketClient::SocketClient(
   std::strncpy(_server_addr.sun_path,
                _socket_file.c_str(),
                sizeof(_server_addr.sun_path) - 1);
+
+  _fds[0].fd = _client_socket;
+  _fds[0].events = POLLIN;
 }
 
 SocketClient::~SocketClient() {
@@ -62,7 +52,7 @@ bool SocketClient::connect() {
 }
 
 bool SocketClient::close() {
-  if (_client_socket >= 0) {
+  if (_client_socket > 0) {
     ::close(_client_socket);
 
     _client_socket = -1;
@@ -73,43 +63,37 @@ bool SocketClient::close() {
   }
 }
 
-bool SocketClient::send_data(int op_code, const std::string& data) {
+bool SocketClient::send_data(const std::vector<char>& data) {
   if (_client_socket < 0) {
     return false;
   }
 
-  std::vector<char> packet = encode_packet(op_code, data);
-
-  int ret = ::send(_client_socket, packet.data(), packet.size(), 0);
+  int ret = ::send(_client_socket, data.data(), data.size(), 0);
 
   return ret != -1;
 }
 
-std::string SocketClient::recv_data() {
-  int data_len;
-  std::vector<char> op_code(4), data_size(4), buffer;
+std::optional<std::vector<char>> SocketClient::recv_data(int buffer_size) {
+  std::vector<char> buffer(buffer_size);
 
-  int ret = ::recv(_client_socket, op_code.data(), op_code.size(), 0);
-
-  if (ret == -1) {
-    return "";
-  }
-
-  ret = ::recv(_client_socket, data_size.data(), data_size.size(), 0);
+  int ret = ::recv(_client_socket, buffer.data(), buffer.size(), 0);
 
   if (ret == -1) {
-    return "";
+    return {};
   }
 
-  std::memcpy(&data_len, data_size.data(), data_size.size());
-  buffer.resize(data_len);
+  return buffer;
+}
 
-  ret = ::recv(_client_socket, buffer.data(), buffer.size(), 0);
+std::optional<std::vector<char>> SocketClient::recv_data(
+  int buffer_size, int timeout
+) {
+  int ret = ::poll(_fds, 1, timeout);
 
-  if (ret == -1) {
-    return "";
+  if (ret > 0 && _fds[0].revents & POLLIN) {
+    return recv_data(buffer_size);
+  } else {
+    return {};
   }
-
-  return std::string(buffer.begin(), buffer.end());
 }
 }  // namespace websockets
