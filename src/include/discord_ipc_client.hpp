@@ -35,6 +35,7 @@ struct IPCPayload {
 
 class DiscordIPCClient {
  private:
+  const pid_t _pid;
   std::string _client_id;
 
   SocketClient _socket;

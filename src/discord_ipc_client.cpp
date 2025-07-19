@@ -5,6 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <unistd.h>
+
 #include <thread>
 #include <string>
 #include <optional>
@@ -49,13 +51,30 @@ void DiscordIPCClient::recv_thread() {
 
     std::cout << recv_payload.opcode << std::endl;
     std::cout << recv_payload.payload.to_string() << std::endl;
+
+    switch (recv_payload.opcode) {
+      case IPCOpcodes::ping:
+        send_packet({ pong, recv_payload.payload });
+
+        break;
+      case IPCOpcodes::frame:
+        break;
+      }
+      case IPCOpcodes::close:
+        close();
+
+        break;
+      default:
+        break;
+    }
   }
 
-  std::cout << "stopping recv thread" << std::endl;
+  std::cout << "socket connection closed" << std::endl;
 }
 
 DiscordIPCClient::DiscordIPCClient(const std::string& client_id)
-: _client_id(client_id),
+: _pid(getpid()),
+_client_id(client_id),
 _socket(utils::find_discord_ipc_file()),
 _stop_recv_thread(false) {}
 
