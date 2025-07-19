@@ -19,24 +19,28 @@ using utils::escape_string;
 namespace json {
 JSON::JSON() : _value(JSONObject{}) {}
 
-JSON::JSON(std::nullptr_t value) : _value(value) {}
+JSON::JSON(JSONNull value) : _value(value) {}
 
-JSON::JSON(const std::string& value) : _value(value) {}
+JSON::JSON(const JSONString& value) : _value(value) {}
 
 JSON::JSON(const char* value) : _value(std::string(value)) {}
 
-JSON::JSON(int value) : _value(value) {}
+JSON::JSON(JSONInt value) : _value(value) {}
 
-JSON::JSON(double value) : _value(value) {}
+JSON::JSON(JSONDouble value) : _value(value) {}
 
-JSON::JSON(bool value) : _value(value) {}
+JSON::JSON(JSONBool value) : _value(value) {}
 
 JSON::JSON(const JSONArray& value) : _value(value) {}
 
 JSON::JSON(const JSONObject& value) : _value(value) {}
 
-JSON& JSON::operator[](const std::string& key) {
+JSON& JSON::operator[](const JSONString& key) {
   return std::get<JSONObject>(_value)[key];
+}
+
+JSON JSON::operator[](const JSONString& key) const {
+  return std::get<JSONObject>(_value).at(key);
 }
 
 template<typename T>
@@ -89,15 +93,15 @@ void JSON::stringify(std::ostream& os) const {
     }
 
     os << "]";
-  } else if (is<std::string>()) {
-    os << "\"" << escape_string(as<std::string>()) << "\"";
-  } else if (is<int>()) {
-    os << std::to_string(as<int>());
-  } else if (is<double>()) {
-    os << std::to_string(as<double>());
-  } else if (is<bool>()) {
-    os << (as<bool>() ? "true" : "false");
-  } else if (is<std::nullptr_t>()) {
+  } else if (is<JSONString>()) {
+    os << "\"" << escape_string(as<JSONString>()) << "\"";
+  } else if (is<JSONInt>()) {
+    os << std::to_string(as<JSONInt>());
+  } else if (is<JSONDouble>()) {
+    os << std::to_string(as<JSONDouble>());
+  } else if (is<JSONBool>()) {
+    os << (as<JSONBool>() ? "true" : "false");
+  } else if (is<JSONNull>()) {
     os << "null";
   }
 }
@@ -107,4 +111,20 @@ std::string JSON::to_string() const {
   stringify(os);
   return os.str();
 }
+
+template JSONString JSON::as<JSONString>() const;
+template JSONInt JSON::as<JSONInt>() const;
+template JSONDouble JSON::as<JSONDouble>() const;
+template JSONBool JSON::as<JSONBool>() const;
+template JSONArray JSON::as<JSONArray>() const;
+template JSONObject JSON::as<JSONObject>() const;
+template JSONNull JSON::as<JSONNull>() const;
+
+template bool JSON::is<JSONString>() const;
+template bool JSON::is<JSONInt>() const;
+template bool JSON::is<JSONDouble>() const;
+template bool JSON::is<JSONBool>() const;
+template bool JSON::is<JSONArray>() const;
+template bool JSON::is<JSONObject>() const;
+template bool JSON::is<JSONNull>() const;
 }  // namespace json

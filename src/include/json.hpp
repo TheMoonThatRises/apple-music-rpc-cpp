@@ -17,17 +17,22 @@
 namespace json {
 class JSON;
 
+typedef std::nullptr_t JSONNull;
+typedef std::string JSONString;
+typedef int JSONInt;
+typedef double JSONDouble;
+typedef bool JSONBool;
 typedef std::map<std::string, JSON> JSONObject;
 typedef std::vector<JSON> JSONArray;
 
 class JSON {
  private:
   using JSONValue = std::variant<
-    std::nullptr_t,
-    std::string,
-    int,
-    double,
-    bool,
+    JSONNull,
+    JSONString,
+    JSONInt,
+    JSONDouble,
+    JSONBool,
     JSONArray,
     JSONObject
   >;
@@ -39,16 +44,17 @@ class JSON {
 
  public:
   JSON();
-  explicit JSON(std::nullptr_t value);
-  explicit JSON(const std::string& value);
+  explicit JSON(JSONNull value);
+  explicit JSON(const JSONString& value);
   explicit JSON(const char* value);
-  explicit JSON(int value);
-  explicit JSON(double value);
-  explicit JSON(bool value);
+  explicit JSON(JSONInt value);
+  explicit JSON(JSONDouble value);
+  explicit JSON(JSONBool value);
   explicit JSON(const JSONArray& value);
   explicit JSON(const JSONObject& value);
 
-  JSON& operator[](const std::string& key);
+  JSON& operator[](const JSONString& key);
+  JSON operator[](const JSONString& key) const;
 
   template<typename T>
   T as() const;
