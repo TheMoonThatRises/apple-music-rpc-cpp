@@ -7,11 +7,17 @@
 
 #include <unistd.h>
 
+#include <map>
 #include <string>
 #include <vector>
 #include <regex>
 
 #include "include/utils.hpp"
+
+namespace utils {
+const std::map<std::string, std::string> _escape_key {
+  {"\\\"", "\""}
+};
 
 std::string find_discord_ipc_file() {
   std::string user_tmp_dir = getenv("TMPDIR");
@@ -29,9 +35,22 @@ std::string find_discord_ipc_file() {
 }
 
 std::string unescape_string(const std::string& input) {
-  return std::regex_replace(input, std::regex("\\\""), "\"");
+  std::string output = input;
+
+  for (const auto& [key, value] : _escape_key) {
+    output = std::regex_replace(output, std::regex(key), value);
+  }
+
+  return output;
 }
 
 std::string escape_string(const std::string& input) {
-  return std::regex_replace(input, std::regex("\""), "\\\"");
+  std::string output = input;
+
+  for (const auto& [key, value] : _escape_key) {
+    output = std::regex_replace(output, std::regex(value), key);
+  }
+
+  return output;
 }
+}  // namespace utils
