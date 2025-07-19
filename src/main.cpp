@@ -9,7 +9,7 @@
 #include <format>
 #include <string>
 
-#include "include/client_connection.hpp"
+#include "include/socket_client.hpp"
 #include "include/json.hpp"
 #include "include/parser.hpp"
 #include "include/utils.hpp"
@@ -32,7 +32,7 @@ int main() {
 
   std::cout << handshake_data << std::endl;
 
-  ClientConnection client(discord_ipc_file);
+  SocketClient client(discord_ipc_file);
 
   bool ret = client.connect();
 

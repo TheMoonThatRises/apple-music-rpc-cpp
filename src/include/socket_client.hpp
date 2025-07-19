@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_CLIENT_CONNECTION_HPP_
-#define APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_CLIENT_CONNECTION_HPP_
+#ifndef APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_SOCKET_CLIENT_HPP_
+#define APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_SOCKET_CLIENT_HPP_
 
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-class ClientConnection {
+class SocketClient {
  private:
     std::string _socket_file;
 
@@ -25,8 +25,8 @@ class ClientConnection {
     static std::vector<char> encode_packet(int op, const std::string& data);
 
  public:
-    explicit ClientConnection(const std::string& socket_file);
-    ~ClientConnection();
+    explicit SocketClient(const std::string& socket_file);
+    ~SocketClient();
 
     bool connect();
     bool close();
@@ -35,4 +35,4 @@ class ClientConnection {
     std::string recv_data();
 };
 
-#endif  // APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_CLIENT_CONNECTION_HPP_
+#endif  // APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_SOCKET_CLIENT_HPP_

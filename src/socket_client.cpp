@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include "include/client_connection.hpp"
+#include "include/socket_client.hpp"
 
-std::vector<char> ClientConnection::encode_packet(
+std::vector<char> SocketClient::encode_packet(
   int op,
   const std::string& data
 ) {
@@ -28,7 +28,7 @@ std::vector<char> ClientConnection::encode_packet(
   return packet;
 }
 
-ClientConnection::ClientConnection(
+SocketClient::SocketClient(
   const std::string& socket_file)
 : _socket_file(socket_file) {
   int opt = 1;
@@ -44,11 +44,11 @@ ClientConnection::ClientConnection(
                sizeof(_server_addr.sun_path) - 1);
 }
 
-ClientConnection::~ClientConnection() {
+SocketClient::~SocketClient() {
   close();
 }
 
-bool ClientConnection::connect() {
+bool SocketClient::connect() {
   if (_client_socket < 0) {
     return false;
   }
@@ -60,7 +60,7 @@ bool ClientConnection::connect() {
   return ret != -1;
 }
 
-bool ClientConnection::close() {
+bool SocketClient::close() {
   if (_client_socket >= 0) {
     ::close(_client_socket);
 
@@ -72,7 +72,7 @@ bool ClientConnection::close() {
   }
 }
 
-bool ClientConnection::send_data(int op_code, const std::string& data) {
+bool SocketClient::send_data(int op_code, const std::string& data) {
   if (_client_socket < 0) {
     return false;
   }
@@ -84,7 +84,7 @@ bool ClientConnection::send_data(int op_code, const std::string& data) {
   return ret != -1;
 }
 
-std::string ClientConnection::recv_data() {
+std::string SocketClient::recv_data() {
   int data_len;
   std::vector<char> op_code(4), data_size(4), buffer;
 
