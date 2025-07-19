@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+namespace websockets {
 class SocketClient {
  private:
     std::string _socket_file;
@@ -34,5 +35,6 @@ class SocketClient {
     bool send_data(int op_code, const std::string& data);
     std::string recv_data();
 };
+}  // namespace websockets
 
 #endif  // APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_SOCKET_CLIENT_HPP_

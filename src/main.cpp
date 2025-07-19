@@ -14,6 +14,7 @@
 #include "include/parser.hpp"
 #include "include/utils.hpp"
 
+using websockets::SocketClient;
 using utils::find_discord_ipc_file;
 using json::JSON;
 using json::JSONObject;

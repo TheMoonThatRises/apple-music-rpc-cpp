@@ -13,6 +13,7 @@
 
 #include "include/socket_client.hpp"
 
+namespace websockets {
 std::vector<char> SocketClient::encode_packet(
   int op,
   const std::string& data
@@ -111,3 +112,4 @@ std::string SocketClient::recv_data() {
 
   return std::string(buffer.begin(), buffer.end());
 }
+}  // namespace websockets
