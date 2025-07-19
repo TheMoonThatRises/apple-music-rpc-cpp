@@ -5,6 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <unistd.h>
+
 #include <iostream>
 #include <format>
 #include <string>
@@ -19,8 +21,8 @@ using json::JSONObject;
 using json::Parser;
 
 int main() {
-  // std::string music_client_id = "773825528921849856";  // apple music
-  std::string music_client_id = "1313374141960949831";  // spwifiy
+  std::string music_client_id = "773825528921849856";  // apple music
+  // std::string music_client_id = "1313374141960949831";  // spwifiy
 
   DiscordIPCClient client(music_client_id);
 
