@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <random>
 #include <regex>
 
 #include "include/utils.hpp"
@@ -53,4 +54,36 @@ std::string escape_string(const std::string& input) {
 
   return output;
 }
+
+template<typename T>
+T generate_random_num(T min, T max) {
+  static std::random_device _rdev;
+  static std::mt19937 _rng(_rdev());
+  static std::uniform_real_distribution<> _rdist(min, max);
+
+  return _rdist(_rng);
+}
+
+std::string generate_uuid() {
+  static const std::string _valid_chars = "0123456789abcdef";
+  static const std::vector<int> _dashes = {
+    0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0
+  };
+
+  std::string uuid = "";
+
+  for (int i = 0; i < 16; ++i) {
+    if (_dashes[i]) {
+      uuid += '-';
+    }
+
+    uuid += _valid_chars[generate_random_num(0, 15)];
+    uuid += _valid_chars[generate_random_num(0, 15)];
+  }
+
+  return uuid;
+}
+
+template double generate_random_num(double, double);
+template int generate_random_num(int, int);
 }  // namespace utils

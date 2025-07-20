@@ -19,6 +19,11 @@ std::string find_discord_ipc_file();
 
 std::string unescape_string(const std::string& input);
 std::string escape_string(const std::string& input);
+
+template<typename T>
+T generate_random_num(T min, T max);
+
+std::string generate_uuid();
 }  // namespace utils
 
 #endif  // APPLE_MUSIC_RPC_CPP_SRC_INCLUDE_UTILS_HPP_
