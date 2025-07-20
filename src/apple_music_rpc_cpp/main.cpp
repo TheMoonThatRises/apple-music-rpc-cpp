@@ -5,20 +5,12 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <unistd.h>
-
 #include <iostream>
-#include <format>
 #include <string>
 
-#include "include/discord_ipc_client.hpp"
-#include "include/json.hpp"
-#include "include/parser.hpp"
+#include <discord_ipc_cpp/discord_ipc_client.hpp>
 
-using discordipc::DiscordIPCClient;
-using json::JSON;
-using json::JSONObject;
-using json::Parser;
+using discord_ipc_cpp::DiscordIPCClient;
 
 int main() {
   std::string music_client_id = "773825528921849856";  // apple music

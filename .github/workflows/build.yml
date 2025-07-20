@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: true
+          token: ${{ secrets.PAT_TOKEN_DISCORD_IPC_CPP }}
 
       - name: Install CMake
         run: brew install cmake

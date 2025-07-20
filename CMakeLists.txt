@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.14)
 project(apple_music_rpc_cpp)
 
-file(GLOB_RECURSE sources ${CMAKE_SOURCE_DIR}/src/*.cpp)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O3 -pthread -std=c++20")
+add_subdirectory(src/discord_ipc_cpp)
 
-add_executable(apple_music_rpc ${sources})
-
-target_compile_options(apple_music_rpc PUBLIC)
+add_executable(apple_music_rpc_cpp src/apple_music_rpc_cpp/main.cpp)
+target_link_libraries(apple_music_rpc_cpp PRIVATE discord_ipc_cpp)
+target_compile_options(apple_music_rpc_cpp PRIVATE -Wall -Wextra -O3 -pthread)
