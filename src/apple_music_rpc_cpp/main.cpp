@@ -13,8 +13,8 @@
 using discord_ipc_cpp::DiscordIPCClient;
 
 int main() {
-  std::string music_client_id = "773825528921849856";  // apple music
-  // std::string music_client_id = "1313374141960949831";  // spwifiy
+  // std::string music_client_id = "773825528921849856";  // apple music
+  std::string music_client_id = "1313374141960949831";  // spwifiy
 
   DiscordIPCClient client(music_client_id);
 
