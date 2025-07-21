@@ -12,13 +12,14 @@
 #include <discord_ipc_cpp/ipc_types.hpp>
 
 #include "include/utils.hpp"
+#include "include/music_types.hpp"
+#include "include/objc_bridge.hpp"
 
 using discord_ipc_cpp::DiscordIPCClient;
 using discord_ipc_cpp::ipc_types::RichPresence;
 
 int main() {
-  // std::string music_client_id = "773825528921849856";  // apple music
-  std::string music_client_id = "1313374141960949831";  // spwifiy
+  std::string music_client_id = "773825528921849856";  // apple music
 
   DiscordIPCClient client(music_client_id);
 
@@ -30,10 +31,6 @@ int main() {
     return 1;
   }
 
-  int song_duration = 203;
-  int start_time = get_current_time_seconds();
-  int end_time = get_current_time_seconds() + song_duration;
-
   ret = client.set_empty_presence();
 
   if (!ret) {
@@ -42,21 +39,33 @@ int main() {
     return 1;
   }
 
-  client.set_presence({
-    .details = "Test song name",
-    .state = "Test artist name",
-    .assets = {
-      .large_text = "Test album name",
-      .large_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/SMPTE_Color_Bars.svg/1200px-SMPTE_Color_Bars.svg.png"
-    },
-    .timestamps = {
-      .start = start_time,
-      .end = end_time
-    },
-    .type = RichPresence::listening
-  });
+  objc_bridge::bind_music_player_info(
+    [&](const MusicPlayerInfo& player_info) {
+      if (player_info.player_state == "Paused") {
+        client.set_empty_presence();
 
-  system("read");
+        return;
+      }
+
+      int player_time_s = player_info.total_time / 1000;
+      int start_time = get_current_time_seconds();
+      int end_time = get_current_time_seconds() + player_time_s;
+
+      client.set_presence({
+        .details = player_info.name,
+        .state = player_info.artist,
+        .assets = {
+          .large_text = player_info.album,
+        },
+        .timestamps = {
+          .start = start_time,
+          .end = end_time
+        },
+        .type = RichPresence::listening
+      });
+    });
+
+  objc_bridge::run_cf_main_loop();
 
   client.close();
 

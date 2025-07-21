@@ -8,6 +8,8 @@
 #include <chrono>
 #include <ctime>
 
+#include "include/utils.hpp"
+
 int get_current_time_seconds() {
   auto now = std::chrono::system_clock::now();
   auto now_c = std::chrono::system_clock::to_time_t(now);
