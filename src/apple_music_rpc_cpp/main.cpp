@@ -30,9 +30,9 @@ int main() {
     return 1;
   }
 
-  long song_duration = 203;
-  long start_time = get_current_time_seconds();
-  long end_time = get_current_time_seconds() + song_duration;
+  int song_duration = 203;
+  int start_time = get_current_time_seconds();
+  int end_time = get_current_time_seconds() + song_duration;
 
   ret = client.set_empty_presence();
 
