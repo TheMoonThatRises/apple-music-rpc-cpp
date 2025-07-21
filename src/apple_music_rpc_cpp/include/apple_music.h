@@ -16,6 +16,8 @@
 
 @property(nonatomic) t_player_info_callback player_info_callback;
 
++ (NotificationCenterBinder*)shared;  // NOLINT(readability/casting)
+
 - (id)init;
 - (void)dealloc;
 

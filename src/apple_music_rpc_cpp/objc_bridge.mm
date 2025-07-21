@@ -12,14 +12,7 @@
 
 namespace objc_bridge {
 void bind_music_player_info(t_player_info_callback callback) {
-  static NotificationCenterBinder *binder = nil;
-  static dispatch_once_t binder_token;
-
-  dispatch_once(&binder_token, ^{
-    binder = [[NotificationCenterBinder alloc] init];
-  });
-
-  [binder set_player_callback:callback];
+  [[NotificationCenterBinder shared] set_player_callback:callback];
 }
 
 void run_cf_main_loop() {

@@ -13,6 +13,16 @@
 
 @implementation NotificationCenterBinder
 
++ (NotificationCenterBinder*)shared {
+  static NotificationCenterBinder* _shared = nil;
+
+  if (!_shared) {
+    _shared = [[NotificationCenterBinder alloc] init];
+  }
+
+  return _shared;
+}
+
 - (id)init {
   self = [super init];
 
