@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+#include <string>
+
 #import "include/apple_music.h"
 
 #include "include/music_types.hpp"
@@ -44,6 +46,12 @@
   [super dealloc];
 }
 
+- (void)set_safe_string:(std::string*)field from_item:(id)item {
+  if (item && [item isKindOfClass:[NSString class]]) {
+    *field = [(NSString*)item UTF8String];
+  }
+}
+
 - (void)set_player_callback: (t_player_info_callback)callback {
   self.player_info_callback = callback;
 }
@@ -58,16 +66,17 @@
   MusicPlayerInfo playerInfo {};
 
   if (userInfo) {
-    playerInfo.album = [userInfo[@"Album"] UTF8String];
-    playerInfo.artist = [userInfo[@"Artist"] UTF8String];
-    playerInfo.composer = [userInfo[@"Composer"] UTF8String];
-    playerInfo.name = [userInfo[@"Name"] UTF8String];
-    playerInfo.player_state = [userInfo[@"Player State"] UTF8String];
-    playerInfo.total_time = [userInfo[@"Total Time"] intValue];
+    [self set_safe_string:&playerInfo.album from_item:userInfo[@"Album"]];
+    [self set_safe_string:&playerInfo.artist from_item:userInfo[@"Artist"]];
+    [self set_safe_string:&playerInfo.composer from_item:userInfo[@"Composer"]];
+    [self set_safe_string:&playerInfo.name from_item:userInfo[@"Name"]];
+    [self set_safe_string:&playerInfo.player_state
+          from_item:userInfo[@"Player State"]];
+    [self set_safe_string:&playerInfo.library_persistent_id
+          from_item:userInfo[@"Library PersistentID"]];
 
-    if (userInfo[@"Library PersistentID"]) {
-      playerInfo.library_persistent_id = [
-        userInfo[@"Library PersistentID"] UTF8String];
+    if (userInfo[@"Total Time"]) {
+      playerInfo.total_time = [userInfo[@"Total Time"] intValue];
     }
 
     if (userInfo[@"PersistentID"]) {
