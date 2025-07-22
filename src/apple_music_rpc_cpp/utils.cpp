@@ -8,6 +8,7 @@
 #include <signal.h>
 
 #include <chrono>
+#include <cmath>
 #include <ctime>
 
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
@@ -39,13 +40,15 @@ void music_player_binder(
   DiscordIPCClient& client,
   const MusicPlayerInfo& player_info
 ) {
-  if (player_info.player_state == "Paused") {
+  if (player_info.player_state == "Paused" ||
+      player_info.player_state == "Stopped"
+  ) {
     client.set_empty_presence();
 
     return;
   }
 
-  int player_time_s = player_info.total_time / 1000;
+  int player_time_s = std::round(player_info.total_time / 1000.);
   int start_time = get_current_time_seconds();
   int end_time = get_current_time_seconds() + player_time_s;
 
