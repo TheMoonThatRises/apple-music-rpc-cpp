@@ -8,6 +8,8 @@
 #ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_UTILS_HPP_
 #define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_UTILS_HPP_
 
+#include <string>
+
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 
 #include "./music_types.hpp"
@@ -15,6 +17,8 @@
 using discord_ipc_cpp::DiscordIPCClient;
 
 int get_current_time_seconds();
+
+std::string to_lower(const std::string& input);
 
 void register_signal_callback_handler(DiscordIPCClient& client);
 

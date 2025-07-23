@@ -13,9 +13,11 @@ target_include_directories(apple_music_rpc_cpp PRIVATE
 )
 
 target_sources(apple_music_rpc_cpp PRIVATE
-  src/apple_music_rpc_cpp/apple_music.mm
-  src/apple_music_rpc_cpp/utils.cpp
+  src/apple_music_rpc_cpp/itunes_api.mm
+  src/apple_music_rpc_cpp/music_types.cpp
+  src/apple_music_rpc_cpp/notif_binder.mm
   src/apple_music_rpc_cpp/objc_bridge.mm
+  src/apple_music_rpc_cpp/utils.cpp
 )
 
 target_link_libraries(apple_music_rpc_cpp PRIVATE discord_ipc_cpp)

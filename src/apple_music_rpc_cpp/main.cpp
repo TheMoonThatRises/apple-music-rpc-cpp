@@ -16,6 +16,9 @@
 
 using discord_ipc_cpp::DiscordIPCClient;
 
+using objc_bridge::bind_music_player_info;
+using objc_bridge::run_cf_main_loop;
+
 int main() {
   std::string music_client_id = "773825528921849856";  // apple music
 
@@ -39,11 +42,11 @@ int main() {
 
   register_signal_callback_handler(client);
 
-  objc_bridge::bind_music_player_info([&](const auto& info) {
+  bind_music_player_info([&](const auto& info) {
     music_player_binder(client, info);
   });
 
-  objc_bridge::run_cf_main_loop();
+  run_cf_main_loop();
 
   return 0;
 }
