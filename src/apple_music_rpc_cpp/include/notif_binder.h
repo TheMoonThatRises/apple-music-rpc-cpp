@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
-#define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
+#ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_NOTIF_BINDER_H_
+#define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_NOTIF_BINDER_H_
 
 #import <Foundation/Foundation.h>
 
@@ -26,11 +26,11 @@
 - (void)set_safe_string:(std::string*)field
         from_item:(NSString*)item;  // NOLINT(readability/casting)
 
-- (void)set_player_callback: (t_player_info_callback)callback;
+- (void)set_player_callback:(t_player_info_callback)callback;
 
 - (void)receive_player_info_update:
   (NSNotification*)notification;  // NOLINT(readability/casting)
 
 @end
 
-#endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
+#endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_NOTIF_BINDER_H_

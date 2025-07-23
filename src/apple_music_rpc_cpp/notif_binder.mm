@@ -9,7 +9,7 @@
 
 #include <string>
 
-#import "include/apple_music.h"
+#import "include/notif_binder.h"
 
 #include "include/music_types.hpp"
 
@@ -52,11 +52,11 @@
   }
 }
 
-- (void)set_player_callback: (t_player_info_callback)callback {
+- (void)set_player_callback:(t_player_info_callback)callback {
   self.player_info_callback = callback;
 }
 
-- (void)receive_player_info_update: (NSNotification*)notification {
+- (void)receive_player_info_update:(NSNotification*)notification {
   if (!self.player_info_callback) {
     return;
   }
