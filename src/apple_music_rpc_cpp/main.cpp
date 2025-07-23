@@ -42,7 +42,7 @@ int main() {
 
   register_signal_callback_handler(client);
 
-  bind_music_player_info([&](const auto& info) {
+  bind_music_player_info([&client](const auto& info) {
     music_player_binder(client, info);
   });
 
