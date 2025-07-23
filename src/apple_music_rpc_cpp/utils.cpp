@@ -34,10 +34,10 @@ int get_current_time_seconds() {
 }
 
 std::string to_lower(const std::string& input) {
-  std::string output;
+  std::string output(input);
 
   std::transform(
-    input.cbegin(), input.cend(), output.begin(),
+    output.begin(), output.end(), output.begin(),
     [](const auto& ch) { return std::tolower(ch); });
 
   return output;

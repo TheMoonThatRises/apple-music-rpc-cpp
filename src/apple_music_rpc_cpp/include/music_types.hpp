@@ -29,9 +29,9 @@ typedef struct MusicPlayerInfo {
 typedef struct ITunesSong {
   std::string wrapper_type;
   std::string kind;
-  std::string artist_id;
-  std::string collection_id;
-  std::string track_id;
+  int artist_id;
+  int collection_id;
+  int track_id;
   std::string artist_name;
   std::string collection_name;
   std::string track_name;
@@ -53,7 +53,7 @@ typedef struct ITunesSong {
   int disc_number;
   int track_count;
   int track_number;
-  int64_t track_time_millis;
+  int track_time_millis;
   std::string country;
   std::string currency;
   std::string primary_genre_name;
