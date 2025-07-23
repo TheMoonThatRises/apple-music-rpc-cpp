@@ -65,33 +65,31 @@ void music_player_binder(
     return;
   }
 
-  int player_time_s = std::round(player_info.total_time / 1000.);
-  int start_time = get_current_time_seconds();
-  int end_time = get_current_time_seconds() + player_time_s;
-
-  RichPresence base_presence = {
-    .name = "Apple Music",
-    .type = RichPresence::at_listening,
-    .timestamps = RichPresence::Timestamps {
-      .start = start_time,
-      .end = end_time
-    },
-    .status_display_type = RichPresence::sdt_name,
-    .details = player_info.name,
-    .state = player_info.artist,
-    .assets = RichPresence::Assets {
-      .large_text = player_info.album,
-    }
-  };
-
-  client.set_presence(base_presence);
-
   get_itunes_result(
     player_info.name, player_info.artist, player_info.album,
-    [&](const auto& itunes_data) {
+    [&client, player_info](const auto& itunes_data) {
       if (itunes_data.result_count <= 0) {
         return;
       }
+
+      int player_time_s = std::round(player_info.total_time / 1000.);
+      int start_time = get_current_time_seconds();
+      int end_time = get_current_time_seconds() + player_time_s;
+
+      RichPresence base_presence = {
+        .name = "Apple Music",
+        .type = RichPresence::at_listening,
+        .timestamps = RichPresence::Timestamps {
+          .start = start_time,
+          .end = end_time
+        },
+        .status_display_type = RichPresence::sdt_name,
+        .details = player_info.name,
+        .state = player_info.artist,
+        .assets = RichPresence::Assets {
+          .large_text = player_info.album,
+        }
+      };
 
       const ITunesSong* song;
 
@@ -116,9 +114,13 @@ void music_player_binder(
         }
       }
 
-      base_presence.details_url = song->track_view_url;
-      base_presence.state_url = song->artist_view_url;
-      base_presence.assets->large_image = song->artwork_url_100;
-      base_presence.assets->large_url = song->collection_view_url;
+      if (song) {
+        base_presence.details_url = song->track_view_url;
+        base_presence.state_url = song->artist_view_url;
+        base_presence.assets->large_image = song->artwork_url_100;
+        base_presence.assets->large_url = song->collection_view_url;
+      }
+
+      client.set_presence(base_presence);
     });
 }
