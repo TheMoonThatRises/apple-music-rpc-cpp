@@ -61,6 +61,8 @@
         callback(itunes_results);
       } else {
         NSLog(@"Unable to retrieve iTunes API data: %@", error);
+
+        callback({});
       }
     }
   ];
