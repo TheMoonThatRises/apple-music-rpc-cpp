@@ -86,8 +86,11 @@ void Handler::set_accurate_time() {
 }
 
 Handler::Handler(discord_ipc_cpp::DiscordIPCClient& client) :
-_client(client), _presence({}), _player_info({}),
-_song_result({}), _has_presence(true) {
+_client(client),
+_presence({}),
+_player_info({}),
+_song_result({}),
+_has_presence(true) {
   set_empty_presence();
 }
 
