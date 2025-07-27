@@ -59,6 +59,23 @@
   self.player_info_callback = callback;
 }
 
+- (double)retrieve_playback_info {
+  static NSString* apple_script =
+    @"tell application \"Music\" to player position";
+  static NSAppleScript* script = [[NSAppleScript alloc]
+    initWithSource:apple_script
+  ];
+
+  NSDictionary* error_dict = nil;
+  NSAppleEventDescriptor* result = [script executeAndReturnError:&error_dict];
+
+  if (error_dict) {
+    return 0.0;
+  } else {
+    return [result doubleValue];
+  }
+}
+
 - (void)receive_player_info_update:(NSNotification*)notification {
   if (!self.player_info_callback) {
     return;

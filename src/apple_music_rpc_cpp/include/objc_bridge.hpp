@@ -14,6 +14,7 @@
 
 namespace objc_bridge {
 void bind_music_player_info(t_player_info_callback);
+double get_music_playback_info();
 void get_itunes_result(const std::string& song_name,
                        const std::string& artist_name,
                        const std::string& album_name,

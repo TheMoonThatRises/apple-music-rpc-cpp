@@ -29,6 +29,8 @@
 
 - (void)set_player_callback:(t_player_info_callback)callback;
 
+- (double)retrieve_playback_info;  // NOLINT(readability/casting)
+
 - (void)receive_player_info_update:
   (NSNotification*)notification;  // NOLINT(readability/casting)
 
