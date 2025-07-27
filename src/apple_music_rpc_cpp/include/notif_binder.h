@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #include <string>
+#include <optional>
 
 #include "./music_types.hpp"
 
@@ -23,7 +24,7 @@
 - (id)init;
 - (void)dealloc;
 
-- (void)set_safe_string:(std::string*)field
+- (void)set_safe_string:(std::optional<std::string>*)field
         from_item:(NSString*)item;  // NOLINT(readability/casting)
 
 - (void)set_player_callback:(t_player_info_callback)callback;

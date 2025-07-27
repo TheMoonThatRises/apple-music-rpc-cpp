@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #include <string>
+#include <optional>
 
 #import "include/notif_binder.h"
 
@@ -46,9 +47,11 @@
   [super dealloc];
 }
 
-- (void)set_safe_string:(std::string*)field from_item:(id)item {
+- (void)set_safe_string:(std::optional<std::string>*)field from_item:(id)item {
   if (item && [item isKindOfClass:[NSString class]]) {
     *field = [(NSString*)item UTF8String];
+  } else {
+    *field = std::nullopt;
   }
 }
 
