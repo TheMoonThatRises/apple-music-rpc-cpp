@@ -11,6 +11,7 @@
 #include <string>
 
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
+#include <discord_ipc_cpp/ipc_types.hpp>
 
 #include "./music_types.hpp"
 
@@ -19,6 +20,11 @@ using discord_ipc_cpp::DiscordIPCClient;
 int get_current_time_seconds();
 
 std::string to_lower(const std::string& input);
+
+std::string clamp_string(const std::string& input);
+
+discord_ipc_cpp::ipc_types::RichPresence construct_presence(
+  const MusicPlayerInfo& player_info);
 
 void register_signal_callback_handler(DiscordIPCClient& client);
 
