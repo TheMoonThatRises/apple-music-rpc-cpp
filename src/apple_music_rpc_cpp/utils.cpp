@@ -12,7 +12,6 @@
 #include <cmath>
 #include <ctime>
 #include <string>
-#include <regex>
 
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 #include <discord_ipc_cpp/ipc_types.hpp>
@@ -23,8 +22,6 @@
 using discord_ipc_cpp::DiscordIPCClient;
 
 using discord_ipc_cpp::ipc_types::RichPresence;
-
-using objc_bridge::get_itunes_result;
 
 int get_current_time_seconds() {
   auto now = std::chrono::system_clock::now();
@@ -102,68 +99,4 @@ void register_signal_callback_handler(DiscordIPCClient& client) {
 
     exit(signum);
   });
-}
-
-void music_player_binder(
-  DiscordIPCClient& client,
-  const MusicPlayerInfo& player_info
-) {
-  if (player_info.player_state == "Paused" ||
-      player_info.player_state == "Stopped"
-  ) {
-    client.set_empty_presence();
-
-    return;
-  }
-
-  RichPresence base_presence = construct_presence(player_info);
-
-  if (!player_info.name.has_value() || !player_info.artist.has_value()) {
-    client.set_presence(base_presence);
-
-    return;
-  }
-
-  get_itunes_result(
-    player_info.name.value(),
-    player_info.artist.value(),
-    player_info.album.value_or(""),
-    [&client, player_info](const auto& itunes_data) {
-      RichPresence presence = construct_presence(player_info);
-
-      const ITunesSong* song = nullptr;
-
-      if (itunes_data.result_count > 0) {
-        std::regex remove_paren_regex("\\(.*\\)$");
-
-        std::string match_album_lower = to_lower(player_info.album.value());
-        std::string match_track_lower = to_lower(player_info.name.value());
-
-        for (const auto& itunes_song : itunes_data.results) {
-          std::string collection_lower = to_lower(
-            itunes_song.collection_name.value());
-          std::string strip_collection = std::regex_replace(
-            collection_lower, remove_paren_regex, "");
-          std::string track_lower = to_lower(itunes_song.track_name.value());
-
-          if ((collection_lower.find(match_album_lower) != std::string::npos ||
-              strip_collection.find(match_album_lower) != std::string::npos) &&
-              track_lower.find(match_track_lower) != std::string::npos
-          ) {
-            song = &itunes_song;
-
-            break;
-          }
-        }
-      }
-
-      if (song) {
-        presence.details_url = song->track_view_url;
-        presence.state_url = song->artist_view_url;
-        presence.assets->large_image = song->artwork_url_100;
-        presence.assets->large_url = song->collection_view_url;
-      }
-
-      client.set_presence(presence);
-    });
 }

@@ -13,6 +13,7 @@ target_include_directories(apple_music_rpc_cpp PRIVATE
 )
 
 target_sources(apple_music_rpc_cpp PRIVATE
+  src/apple_music_rpc_cpp/handler.cpp
   src/apple_music_rpc_cpp/itunes_api.mm
   src/apple_music_rpc_cpp/music_types.cpp
   src/apple_music_rpc_cpp/notif_binder.mm
