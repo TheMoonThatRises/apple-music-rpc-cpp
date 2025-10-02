@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_
-#define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_
+#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_
+#define APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_
 
 #import <Foundation/Foundation.h>
 
@@ -23,4 +23,4 @@
 
 @end
 
-#endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_
+#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_ITUNES_API_H_

@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_
-#define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_
+#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_
+#define APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_
 
 #include <functional>
 #include <string>
@@ -72,4 +72,4 @@ typedef struct ITunesSongResults {
   static ITunesSongResults from_string(const std::string& data);
 } ITunesSongResults;
 
-#endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_
+#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_

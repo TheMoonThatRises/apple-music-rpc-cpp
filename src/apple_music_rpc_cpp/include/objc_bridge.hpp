@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
-#define APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
+#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
+#define APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
 
 #include <string>
 
@@ -23,4 +23,4 @@ void get_itunes_result(const std::string& song_name,
 void run_cf_main_loop();
 }  // namespace objc_bridge
 
-#endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
+#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_OBJC_BRIDGE_HPP_
