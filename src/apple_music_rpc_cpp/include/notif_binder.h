@@ -13,11 +13,13 @@
 #include <string>
 #include <optional>
 
+#include "./callback_types.hpp"
 #include "./music_types.hpp"
 
 @interface NotificationCenterBinder : NSObject
 
 @property(nonatomic) t_player_info_callback player_info_callback;
+@property(nonatomic) t_discord_launch_callback discord_launch_callback;
 
 + (NotificationCenterBinder*)shared;  // NOLINT(readability/casting)
 
@@ -28,10 +30,13 @@
         from_item:(NSString*)item;  // NOLINT(readability/casting)
 
 - (void)set_player_callback:(t_player_info_callback)callback;
+- (void)set_discord_callback:(t_discord_launch_callback)callback;
 
 - (double)retrieve_playback_info;  // NOLINT(readability/casting)
 
 - (void)receive_player_info_update:
+  (NSNotification*)notification;  // NOLINT(readability/casting)
+- (void)receive_discord_launch_notif:
   (NSNotification*)notification;  // NOLINT(readability/casting)
 
 @end

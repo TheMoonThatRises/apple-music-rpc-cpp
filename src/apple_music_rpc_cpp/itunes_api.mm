@@ -11,6 +11,7 @@
 
 #import "include/itunes_api.h"
 
+#include "include/callback_types.hpp"
 #include "include/music_types.hpp"
 
 @implementation ITunesAPI

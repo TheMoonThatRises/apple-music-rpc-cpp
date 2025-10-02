@@ -5,6 +5,7 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <iostream>
 #include <regex>
 #include <string>
 #include <utility>
@@ -124,4 +125,26 @@ void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
     [this](const auto& result) {
       this->itunes_callback(result);
     });
+}
+
+void Handler::discord_launch_binder() {
+  int attempts = 0;
+
+  while (attempts < 5) {
+    std::cout << "Attempting to connect to Discord "
+              << "(" << attempts << "/5)"
+              << "..." << std::endl;
+
+    bool ret = _client.connect();
+
+    if (ret) {
+      std::cout << "Successfully connected to Discord" << std::endl;
+
+      break;
+    } else {
+      ++attempts;
+
+      std::this_thread::sleep_for(std::chrono::seconds(2 * attempts));
+    }
+  }
 }

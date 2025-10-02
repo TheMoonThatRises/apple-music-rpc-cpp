@@ -16,6 +16,10 @@ void bind_music_player_info(t_player_info_callback callback) {
   [[NotificationCenterBinder shared] set_player_callback:callback];
 }
 
+void bind_discord_launch(t_discord_launch_callback callback) {
+  [[NotificationCenterBinder shared] set_discord_callback:callback];
+}
+
 double get_music_playback_info() {
   return [[NotificationCenterBinder shared] retrieve_playback_info];
 }

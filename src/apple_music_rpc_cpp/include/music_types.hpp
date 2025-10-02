@@ -72,8 +72,4 @@ typedef struct ITunesSongResults {
   static ITunesSongResults from_string(const std::string& data);
 } ITunesSongResults;
 
-typedef std::function<void(const MusicPlayerInfo&)> t_player_info_callback;
-
-typedef std::function<void(const ITunesSongResults&)> t_itunes_songs_callback;
-
 #endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_MUSIC_TYPES_HPP_

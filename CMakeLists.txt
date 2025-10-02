@@ -23,4 +23,5 @@ target_sources(apple_music_rpc_cpp PRIVATE
 
 target_link_libraries(apple_music_rpc_cpp PRIVATE discord_ipc_cpp)
 target_link_libraries(apple_music_rpc_cpp PRIVATE "-framework Foundation")
+target_link_libraries(apple_music_rpc_cpp PRIVATE "-framework AppKit")
 target_compile_options(apple_music_rpc_cpp PRIVATE -Wall -Wextra -O3 -pthread)

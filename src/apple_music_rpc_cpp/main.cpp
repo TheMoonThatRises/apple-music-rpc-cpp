@@ -17,6 +17,7 @@
 using discord_ipc_cpp::DiscordIPCClient;
 
 using objc_bridge::bind_music_player_info;
+using objc_bridge::bind_discord_launch;
 using objc_bridge::run_cf_main_loop;
 
 int main() {
@@ -28,13 +29,16 @@ int main() {
   bool ret = client.connect();
 
   if (!ret) {
-    std::cout << "failed to connect to socket" << std::endl;
-
-    return 1;
+    std::cout << "Failed to connect to socket: "
+              << "will attempt to connect on launch"
+              << std::endl;
   }
 
   register_signal_callback_handler(client);
 
+  bind_discord_launch([&handler]() {
+    handler.discord_launch_binder();
+  });
   bind_music_player_info([&handler](const auto& info) {
     handler.music_player_binder(info);
   });

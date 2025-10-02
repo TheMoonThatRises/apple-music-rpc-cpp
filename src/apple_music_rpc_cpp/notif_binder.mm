@@ -6,12 +6,14 @@
 */
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 #include <string>
 #include <optional>
 
 #import "include/notif_binder.h"
 
+#include "include/callback_types.hpp"
 #include "include/music_types.hpp"
 
 @implementation NotificationCenterBinder
@@ -36,6 +38,13 @@
       name:@"com.apple.Music.playerInfo"
       object:nil
     ];
+
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+      addObserver:self
+      selector:@selector(receive_discord_launch_notif:)
+      name:NSWorkspaceDidLaunchApplicationNotification
+      object:nil
+    ];
   }
 
   return self;
@@ -57,6 +66,10 @@
 
 - (void)set_player_callback:(t_player_info_callback)callback {
   self.player_info_callback = callback;
+}
+
+- (void)set_discord_callback:(t_discord_launch_callback)callback {
+  self.discord_launch_callback = callback;
 }
 
 - (double)retrieve_playback_info {
@@ -105,6 +118,41 @@
   }
 
   self.player_info_callback(playerInfo);
+}
+
+- (void)receive_discord_launch_notif:(NSNotification*)notification {
+  if (!self.discord_launch_callback) {
+    return;
+  }
+
+  NSDictionary* userInfo = [notification userInfo];
+  NSRunningApplication* app = userInfo[NSWorkspaceApplicationKey];
+
+  NSString* bundleId = [app bundleIdentifier];
+
+  NSString* regexSearchPattern = @"^com\\.hnc\\.discord.*$";
+  NSRange searchRange = NSMakeRange(0, [bundleId length]);
+  NSError *error = nil;
+  NSRegularExpression *regex = [NSRegularExpression
+    regularExpressionWithPattern:regexSearchPattern
+    options:NSRegularExpressionCaseInsensitive
+    error:&error
+  ];
+
+  if (error) {
+    NSLog(@"Failed to create regular expression: %@", error);
+    return;
+  }
+
+  NSTextCheckingResult *firstMatch = [regex
+    firstMatchInString:bundleId
+    options:0
+    range:searchRange
+  ];
+
+  if (firstMatch) {
+    self.discord_launch_callback();
+  }
 }
 
 @end

@@ -35,6 +35,7 @@ class Handler {
   explicit Handler(discord_ipc_cpp::DiscordIPCClient& client);
 
   void music_player_binder(const MusicPlayerInfo& player_info);
+  void discord_launch_binder();
 };
 
 #endif  // APPLE_MUSIC_RPC_CPP_SRC_APPLE_MUSIC_RPC_CPP_INCLUDE_HANDLER_HPP_

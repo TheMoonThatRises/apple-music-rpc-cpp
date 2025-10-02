@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "./music_types.hpp"
+#include "./callback_types.hpp"
 
 @interface ITunesAPI : NSObject
 
