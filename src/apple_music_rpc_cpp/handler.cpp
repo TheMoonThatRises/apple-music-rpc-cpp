@@ -132,7 +132,7 @@ void Handler::discord_launch_binder() {
 
   while (attempts < 5) {
     std::cout << "Attempting to connect to Discord "
-              << "(" << attempts << "/5)"
+              << "(" << attempts + 1 << "/5)"
               << "..." << std::endl;
 
     bool ret = _client.connect();
