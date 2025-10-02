@@ -26,18 +26,14 @@ int main() {
   DiscordIPCClient client(music_client_id);
   Handler handler(client);
 
-  bool ret = client.connect();
+  handler.attempt_discord_connect();
 
-  if (!ret) {
-    std::cout << "Failed to connect to socket: "
-              << "will attempt to connect on launch"
-              << std::endl;
-  }
+  std::cout << "Hooking into music and launch notifications" << std::endl;
 
   register_signal_callback_handler(client);
 
   bind_discord_launch([&handler]() {
-    handler.discord_launch_binder();
+    handler.attempt_discord_connect();
   });
   bind_music_player_info([&handler](const auto& info) {
     handler.music_player_binder(info);

@@ -91,8 +91,28 @@ _client(client),
 _presence({}),
 _player_info({}),
 _song_result({}),
-_has_presence(true) {
-  set_empty_presence();
+_has_presence(true) {}
+
+void Handler::attempt_discord_connect() {
+  int attempts = 0;
+
+  while (attempts < 5) {
+    std::cout << "Attempting to connect to Discord "
+              << "(" << attempts + 1 << "/5)"
+              << "..." << std::endl;
+
+    bool ret = _client.connect();
+
+    if (ret) {
+      std::cout << "Successfully connected to Discord" << std::endl;
+
+      break;
+    } else {
+      ++attempts;
+
+      std::this_thread::sleep_for(std::chrono::seconds(2 * attempts));
+    }
+  }
 }
 
 void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
@@ -125,26 +145,4 @@ void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
     [this](const auto& result) {
       this->itunes_callback(result);
     });
-}
-
-void Handler::discord_launch_binder() {
-  int attempts = 0;
-
-  while (attempts < 5) {
-    std::cout << "Attempting to connect to Discord "
-              << "(" << attempts + 1 << "/5)"
-              << "..." << std::endl;
-
-    bool ret = _client.connect();
-
-    if (ret) {
-      std::cout << "Successfully connected to Discord" << std::endl;
-
-      break;
-    } else {
-      ++attempts;
-
-      std::this_thread::sleep_for(std::chrono::seconds(2 * attempts));
-    }
-  }
 }
