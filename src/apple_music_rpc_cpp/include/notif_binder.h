@@ -10,11 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#include <string>
-#include <optional>
-
 #include "./callback_types.hpp"
-#include "./music_types.hpp"
 
 @interface NotificationCenterBinder : NSObject
 
@@ -26,13 +22,8 @@
 - (id)init;
 - (void)dealloc;
 
-- (void)set_safe_string:(std::optional<std::string>*)field
-        from_item:(NSString*)item;  // NOLINT(readability/casting)
-
 - (void)set_player_callback:(t_player_info_callback)callback;
 - (void)set_discord_callback:(t_discord_launch_callback)callback;
-
-- (double)retrieve_playback_info;  // NOLINT(readability/casting)
 
 - (void)receive_player_info_update:
   (NSNotification*)notification;  // NOLINT(readability/casting)

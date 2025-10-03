@@ -12,6 +12,7 @@
 #include <optional>
 
 #import "include/notif_binder.h"
+#import "include/apple_music.h"
 
 #include "include/callback_types.hpp"
 #include "include/music_types.hpp"
@@ -56,37 +57,12 @@
   [super dealloc];
 }
 
-- (void)set_safe_string:(std::optional<std::string>*)field from_item:(id)item {
-  if (item && [item isKindOfClass:[NSString class]]) {
-    *field = [(NSString*)item UTF8String];
-  } else {
-    *field = std::nullopt;
-  }
-}
-
 - (void)set_player_callback:(t_player_info_callback)callback {
   self.player_info_callback = callback;
 }
 
 - (void)set_discord_callback:(t_discord_launch_callback)callback {
   self.discord_launch_callback = callback;
-}
-
-- (double)retrieve_playback_info {
-  static NSString* apple_script =
-    @"tell application \"Music\" to player position";
-  static NSAppleScript* script = [[NSAppleScript alloc]
-    initWithSource:apple_script
-  ];
-
-  NSDictionary* error_dict = nil;
-  NSAppleEventDescriptor* result = [script executeAndReturnError:&error_dict];
-
-  if (error_dict) {
-    return 0.0;
-  } else {
-    return [result doubleValue];
-  }
 }
 
 - (void)receive_player_info_update:(NSNotification*)notification {
@@ -99,13 +75,17 @@
   MusicPlayerInfo playerInfo {};
 
   if (userInfo) {
-    [self set_safe_string:&playerInfo.album from_item:userInfo[@"Album"]];
-    [self set_safe_string:&playerInfo.artist from_item:userInfo[@"Artist"]];
-    [self set_safe_string:&playerInfo.composer from_item:userInfo[@"Composer"]];
-    [self set_safe_string:&playerInfo.name from_item:userInfo[@"Name"]];
-    [self set_safe_string:&playerInfo.player_state
+    [AppleMusic set_safe_string:&playerInfo.album
+      from_item:userInfo[@"Album"]];
+    [AppleMusic set_safe_string:&playerInfo.artist
+      from_item:userInfo[@"Artist"]];
+    [AppleMusic set_safe_string:&playerInfo.composer
+      from_item:userInfo[@"Composer"]];
+    [AppleMusic set_safe_string:&playerInfo.name
+      from_item:userInfo[@"Name"]];
+    [AppleMusic set_safe_string:&playerInfo.player_state
           from_item:userInfo[@"Player State"]];
-    [self set_safe_string:&playerInfo.library_persistent_id
+    [AppleMusic set_safe_string:&playerInfo.library_persistent_id
           from_item:userInfo[@"Library PersistentID"]];
 
     if (userInfo[@"Total Time"]) {

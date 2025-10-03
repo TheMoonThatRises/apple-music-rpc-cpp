@@ -5,6 +5,7 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#import "include/apple_music.h"
 #import "include/objc_bridge.hpp"
 #import "include/notif_binder.h"
 #import "include/itunes_api.h"
@@ -21,7 +22,11 @@ void bind_discord_launch(t_discord_launch_callback callback) {
 }
 
 double get_music_playback_info() {
-  return [[NotificationCenterBinder shared] retrieve_playback_info];
+  return [AppleMusic retrieve_playback_info];
+}
+
+MusicPlayerInfo get_music_player_info() {
+  return [AppleMusic retrieve_current_player_info];
 }
 
 void get_itunes_result(const std::string& song_name,

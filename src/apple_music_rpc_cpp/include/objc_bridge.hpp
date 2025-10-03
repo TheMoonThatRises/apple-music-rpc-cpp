@@ -11,11 +11,13 @@
 #include <string>
 
 #include "./callback_types.hpp"
+#include "./music_types.hpp"
 
 namespace objc_bridge {
 void bind_music_player_info(t_player_info_callback);
 void bind_discord_launch(t_discord_launch_callback);
 double get_music_playback_info();
+MusicPlayerInfo get_music_player_info();
 void get_itunes_result(const std::string& song_name,
                        const std::string& artist_name,
                        const std::string& album_name,

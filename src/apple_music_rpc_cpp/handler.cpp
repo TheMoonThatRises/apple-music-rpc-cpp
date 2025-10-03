@@ -17,6 +17,7 @@
 
 using objc_bridge::get_itunes_result;
 using objc_bridge::get_music_playback_info;
+using objc_bridge::get_music_player_info;
 
 void Handler::set_empty_presence() {
   if (_has_presence) {
@@ -105,6 +106,12 @@ void Handler::attempt_discord_connect() {
 
     if (ret) {
       std::cout << "Successfully connected to Discord" << std::endl;
+
+      while (!_client.has_successful_auth()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(700));
+      }
+
+      music_player_binder(get_music_player_info());
 
       break;
     } else {

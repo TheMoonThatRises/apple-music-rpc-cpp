@@ -10,9 +10,11 @@ add_executable(apple_music_rpc_cpp src/apple_music_rpc_cpp/main.cpp)
 
 target_include_directories(apple_music_rpc_cpp PRIVATE
   src/apple_music_rpc_cpp
+  src/external
 )
 
 target_sources(apple_music_rpc_cpp PRIVATE
+  src/apple_music_rpc_cpp/apple_music.mm
   src/apple_music_rpc_cpp/handler.cpp
   src/apple_music_rpc_cpp/itunes_api.mm
   src/apple_music_rpc_cpp/music_types.cpp
@@ -22,6 +24,9 @@ target_sources(apple_music_rpc_cpp PRIVATE
 )
 
 target_link_libraries(apple_music_rpc_cpp PRIVATE discord_ipc_cpp)
-target_link_libraries(apple_music_rpc_cpp PRIVATE "-framework Foundation")
-target_link_libraries(apple_music_rpc_cpp PRIVATE "-framework AppKit")
+target_link_libraries(apple_music_rpc_cpp PRIVATE
+  "-framework Foundation"
+  "-framework AppKit"
+  "-framework ScriptingBridge"
+)
 target_compile_options(apple_music_rpc_cpp PRIVATE -Wall -Wextra -O3 -pthread)
