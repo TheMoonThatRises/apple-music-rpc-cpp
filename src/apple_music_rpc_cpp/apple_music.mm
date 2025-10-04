@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
+#include <string>
+#include <optional>
+
 #import "include/apple_music.h"
 #import "include/Music.h"
 
