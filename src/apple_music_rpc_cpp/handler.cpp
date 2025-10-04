@@ -94,12 +94,13 @@ _player_info({}),
 _song_result({}),
 _has_presence(true) {}
 
-void Handler::attempt_discord_connect() {
+void Handler::attempt_discord_connect(bool should_attempt) {
+  int max_attempts = should_attempt ? 5 : 1;
   int attempts = 0;
 
-  while (attempts < 5) {
+  while (attempts < max_attempts) {
     std::cout << "Attempting to connect to Discord "
-              << "(" << attempts + 1 << "/5)"
+              << "(" << attempts + 1 << "/" << max_attempts << ")"
               << "..." << std::endl;
 
     bool ret = _client.connect();
@@ -117,8 +118,15 @@ void Handler::attempt_discord_connect() {
     } else {
       ++attempts;
 
-      std::this_thread::sleep_for(std::chrono::seconds(2 * attempts));
+      std::this_thread::sleep_for(
+        std::chrono::seconds(static_cast<int>(round(pow(2 * attempts, 2)))));
     }
+  }
+
+  if (attempts >= max_attempts) {
+    std::cout << "Failed to connect to Discord..."
+              << "Will attempt to connect on application launch"
+              << std::endl;
   }
 }
 

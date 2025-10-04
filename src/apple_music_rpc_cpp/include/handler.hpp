@@ -34,7 +34,7 @@ class Handler {
  public:
   explicit Handler(discord_ipc_cpp::DiscordIPCClient& client);
 
-  void attempt_discord_connect();
+  void attempt_discord_connect(bool should_attempt);
 
   void music_player_binder(const MusicPlayerInfo& player_info);
 };

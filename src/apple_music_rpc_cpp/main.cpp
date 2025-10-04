@@ -26,14 +26,16 @@ int main() {
   DiscordIPCClient client(music_client_id);
   Handler handler(client);
 
-  handler.attempt_discord_connect();
+  handler.attempt_discord_connect(false);
 
   std::cout << "Hooking into music and launch notifications" << std::endl;
 
   register_signal_callback_handler(client);
 
   bind_discord_launch([&handler]() {
-    handler.attempt_discord_connect();
+    std::cout << "Detected Discord relaunching..." << std::endl;
+
+    handler.attempt_discord_connect(true);
   });
   bind_music_player_info([&handler](const auto& info) {
     handler.music_player_binder(info);
