@@ -8,9 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-#include <string>
-#include <optional>
-
 #import "include/notif_binder.h"
 #import "include/apple_music.h"
 
@@ -53,6 +50,7 @@
 
 - (void)dealloc {
   [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+  [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
   [super dealloc];
 }
