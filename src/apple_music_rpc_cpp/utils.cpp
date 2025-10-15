@@ -41,11 +41,12 @@ std::string to_lower(const std::string& input) {
 }
 
 std::string clamp_string(const std::string& input) {
-  std::string clamped = input.substr(
-    0, std::max(static_cast<int>(input.length()), 125));
+  std::string clamped = input;
 
-  if (input.length() >= 128 || clamped.length() <= 2) {
-    clamped += "   ";
+  if (clamped.length() <= 2) {
+    clamped += std::string(3 - clamped.length(), ' ');
+  } else if (clamped.length() >= 128) {
+    clamped = clamped.substr(0, 125) + "...";
   }
 
   return clamped;
