@@ -44,6 +44,12 @@
 
   MusicPlayerInfo playerInfo {};
 
+  if (!music.isRunning) {
+    playerInfo.player_state = "Stopped";
+
+    return playerInfo;
+  }
+
   playerInfo.player_state = [music playerState] == MusicEPlSPlaying
     ? "Playing"
     : "Stopped";
