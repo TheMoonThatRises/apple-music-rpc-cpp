@@ -118,14 +118,13 @@ void Handler::attempt_discord_connect(bool should_attempt) {
     } else {
       ++attempts;
 
-      std::this_thread::sleep_for(
-        std::chrono::seconds(static_cast<int>(round(pow(2 * attempts, 2)))));
+      std::this_thread::sleep_for(std::chrono::seconds(2 * attempts));
     }
   }
 
   if (attempts >= max_attempts) {
-    std::cout << "Failed to connect to Discord..."
-              << "Will attempt to connect on application launch"
+    std::cout << "Failed to connect to Discord... "
+              << "Will attempt to connect on next application launch"
               << std::endl;
   }
 }
