@@ -21,7 +21,7 @@ using objc_bridge::bind_discord_launch;
 using objc_bridge::run_cf_main_loop;
 
 int main() {
-  std::string music_client_id = "773825528921849856";  // apple music
+  std::string music_client_id = "1430370823801274418";  // apple music
 
   DiscordIPCClient client(music_client_id);
   Handler handler(client);
