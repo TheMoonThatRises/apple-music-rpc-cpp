@@ -46,7 +46,7 @@ std::string clamp_string(const std::string& input) {
   if (clamped.length() <= 2) {
     clamped += std::string(3 - clamped.length(), ' ');
   } else if (clamped.length() >= 128) {
-    clamped = clamped.substr(0, 125) + "...";
+    clamped = clamped.replace(125, 128, "...");
   }
 
   return clamped;
