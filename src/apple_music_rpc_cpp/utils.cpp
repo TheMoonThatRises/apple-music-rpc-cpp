@@ -96,7 +96,7 @@ void register_signal_callback_handler(DiscordIPCClient& client) {
   static DiscordIPCClient* static_client = &client;
 
   signal(SIGINT, [](int signum) {
-    static_client->close();
+    static_client->close(true);
 
     exit(signum);
   });
