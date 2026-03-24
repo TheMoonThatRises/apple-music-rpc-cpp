@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_UTILS_HPP_
-#define APPLE_MUSIC_RPC_CPP_INCLUDE_UTILS_HPP_
+#ifndef INCLUDE_UTILS_HPP_
+#define INCLUDE_UTILS_HPP_
 
 #include <string>
 
@@ -27,4 +27,4 @@ discord_ipc_cpp::ipc_types::RichPresence construct_presence(
 void register_signal_callback_handler(
   discord_ipc_cpp::DiscordIPCClient& client);
 
-#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_UTILS_HPP_
+#endif  // INCLUDE_UTILS_HPP_

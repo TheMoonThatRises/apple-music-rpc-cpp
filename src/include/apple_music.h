@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
-#define APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
+#ifndef INCLUDE_APPLE_MUSIC_H_
+#define INCLUDE_APPLE_MUSIC_H_
 
 #import <Foundation/Foundation.h>
 
@@ -25,4 +25,4 @@
 
 @end
 
-#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_APPLE_MUSIC_H_
+#endif  // INCLUDE_APPLE_MUSIC_H_

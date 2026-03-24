@@ -5,8 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef APPLE_MUSIC_RPC_CPP_INCLUDE_HANDLER_HPP_
-#define APPLE_MUSIC_RPC_CPP_INCLUDE_HANDLER_HPP_
+#ifndef INCLUDE_HANDLER_HPP_
+#define INCLUDE_HANDLER_HPP_
 
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 #include <discord_ipc_cpp/ipc_types.hpp>
@@ -39,4 +39,4 @@ class Handler {
   void music_player_binder(const MusicPlayerInfo& player_info);
 };
 
-#endif  // APPLE_MUSIC_RPC_CPP_INCLUDE_HANDLER_HPP_
+#endif  // INCLUDE_HANDLER_HPP_
