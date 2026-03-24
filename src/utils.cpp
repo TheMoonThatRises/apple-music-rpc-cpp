@@ -5,6 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "include/utils.hpp"
+
 #include <signal.h>
 
 #include <algorithm>
@@ -16,7 +18,6 @@
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 #include <discord_ipc_cpp/ipc_types.hpp>
 
-#include "include/utils.hpp"
 #include "include/objc_bridge.hpp"
 
 using discord_ipc_cpp::DiscordIPCClient;

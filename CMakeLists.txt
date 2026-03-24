@@ -12,6 +12,7 @@ add_executable(apple_music_rpc_cpp
 
 target_include_directories(apple_music_rpc_cpp PRIVATE
   external/
+  src/
 )
 
 target_sources(apple_music_rpc_cpp PRIVATE

@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#include "./callback_types.hpp"
+#include "include/callback_types.hpp"
 
 @interface NotificationCenterBinder : NSObject
 

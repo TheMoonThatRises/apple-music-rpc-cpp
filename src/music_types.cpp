@@ -5,6 +5,8 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "include/music_types.hpp"
+
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -12,8 +14,6 @@
 
 #include <discord_ipc_cpp/json.hpp>
 #include <discord_ipc_cpp/parser.hpp>
-
-#include "include/music_types.hpp"
 
 using discord_ipc_cpp::json::JSON;
 using discord_ipc_cpp::json::JSONString;

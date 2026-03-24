@@ -5,13 +5,13 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#import "include/apple_music.h"
+
 #import <Foundation/Foundation.h>
+#import <bridge/include/Music.h>
 
 #include <string>
 #include <optional>
-
-#import "include/apple_music.h"
-#import "bridge/include/Music.h"
 
 #include "include/music_types.hpp"
 

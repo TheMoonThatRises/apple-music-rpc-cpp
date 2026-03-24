@@ -5,11 +5,11 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#import "include/itunes_api.h"
+
 #import <Foundation/Foundation.h>
 
 #include <string>
-
-#import "include/itunes_api.h"
 
 #include "include/callback_types.hpp"
 #include "include/music_types.hpp"

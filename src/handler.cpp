@@ -5,12 +5,13 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "include/handler.hpp"
+
 #include <iostream>
 #include <regex>
 #include <string>
 #include <utility>
 
-#include "include/handler.hpp"
 #include "include/utils.hpp"
 #include "include/music_types.hpp"
 #include "include/objc_bridge.hpp"

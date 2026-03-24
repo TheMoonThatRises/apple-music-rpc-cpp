@@ -5,8 +5,9 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#import "include/apple_music.h"
 #import "include/objc_bridge.hpp"
+
+#import "include/apple_music.h"
 #import "include/notif_binder.h"
 #import "include/itunes_api.h"
 

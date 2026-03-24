@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "./music_types.hpp"
+#include "include/music_types.hpp"
 
 @interface AppleMusic : NSObject
 

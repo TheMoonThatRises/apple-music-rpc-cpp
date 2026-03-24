@@ -5,10 +5,11 @@
   with apple-music-rpc-cpp. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#import "include/notif_binder.h"
+
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-#import "include/notif_binder.h"
 #import "include/apple_music.h"
 
 #include "include/callback_types.hpp"

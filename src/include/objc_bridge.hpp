@@ -10,8 +10,8 @@
 
 #include <string>
 
-#include "./callback_types.hpp"
-#include "./music_types.hpp"
+#include "include/callback_types.hpp"
+#include "include/music_types.hpp"
 
 namespace objc_bridge {
 void bind_music_player_info(t_player_info_callback);

@@ -11,7 +11,7 @@
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 #include <discord_ipc_cpp/ipc_types.hpp>
 
-#include "./music_types.hpp"
+#include "include/music_types.hpp"
 
 class Handler {
  private:

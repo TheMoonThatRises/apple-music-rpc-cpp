@@ -1,1 +1,1 @@
-cppcheck --force --enable=all --suppressions-list=suppressions.txt --inline-suppr --inconclusive --std=c++20 --platform=unix64 --max-ctu-depth=5 --check-level=exhaustive --error-exitcode=1 src/
+cppcheck --force --enable=all --suppressions-list=suppressions.txt --inline-suppr --inconclusive --std=c++20 --platform=unix64 --max-ctu-depth=5 --check-level=exhaustive --error-exitcode=1 -Isrc src/

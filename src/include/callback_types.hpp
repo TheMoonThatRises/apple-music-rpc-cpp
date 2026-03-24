@@ -10,7 +10,7 @@
 
 #include <functional>
 
-#include "./music_types.hpp"
+#include "include/music_types.hpp"
 
 typedef std::function<void(const MusicPlayerInfo&)> t_player_info_callback;
 
