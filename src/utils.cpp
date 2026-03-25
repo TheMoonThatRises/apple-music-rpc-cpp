@@ -57,7 +57,7 @@ RichPresence construct_presence(const MusicPlayerInfo& player_info) {
   RichPresence presence = {
     .name = "Apple Music",
     .type = RichPresence::at_listening,
-    .status_display_type = RichPresence::sdt_details,
+    .status_display_type = RichPresence::sdt_state,
     .assets = RichPresence::Assets {}
   };
 
