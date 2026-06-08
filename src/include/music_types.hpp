@@ -65,6 +65,7 @@ typedef struct ITunesSong {
 } ITunesSong;
 
 typedef struct ITunesSongResults {
+  // cppcheck-suppress uninitMemberVarNoCtor
   int result_count;
   std::vector<ITunesSong> results;
 
