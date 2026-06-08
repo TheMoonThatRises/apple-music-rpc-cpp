@@ -9,6 +9,8 @@
 
 #include <iostream>
 #include <regex>
+#include <cmath>
+#include <thread>
 #include <string>
 #include <utility>
 
@@ -35,22 +37,22 @@ void Handler::set_presence() {
 }
 
 void Handler::itunes_callback(const ITunesSongResults& result) {
-  _song_result = std::move(result);
+  _song_result = result;
 
   const ITunesSong* song = nullptr;
 
   if (_song_result.result_count > 0) {
     std::regex remove_paren_regex("\\(.*\\)$");
 
-    std::string match_album_lower = to_lower(_player_info.album.value());
-    std::string match_track_lower = to_lower(_player_info.name.value());
+    std::string match_album_lower = to_lower(_player_info.album.value_or(""));
+    std::string match_track_lower = to_lower(_player_info.name.value_or(""));
 
     for (const auto& itunes_song : _song_result.results) {
       std::string collection_lower = to_lower(
-        itunes_song.collection_name.value());
+        itunes_song.collection_name.value_or(""));
       std::string strip_collection = std::regex_replace(
         collection_lower, remove_paren_regex, "");
-      std::string track_lower = to_lower(itunes_song.track_name.value());
+      std::string track_lower = to_lower(itunes_song.track_name.value_or(""));
 
       if ((collection_lower.find(match_album_lower) != std::string::npos ||
           strip_collection.find(match_album_lower) != std::string::npos) &&
@@ -131,7 +133,7 @@ void Handler::attempt_discord_connect(bool should_attempt) {
 }
 
 void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
-  _player_info = std::move(player_info);
+  _player_info = player_info;
 
   if (_player_info.player_state == "Paused" ||
       _player_info.player_state == "Stopped"
@@ -154,8 +156,8 @@ void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
   }
 
   get_itunes_result(
-    _player_info.name.value(),
-    _player_info.artist.value(),
+    _player_info.name.value_or(""),
+    _player_info.artist.value_or(""),
     _player_info.album.value_or(""),
     [this](const auto& result) {
       this->itunes_callback(result);

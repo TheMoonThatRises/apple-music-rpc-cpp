@@ -24,7 +24,7 @@ using discord_ipc_cpp::DiscordIPCClient;
 
 using discord_ipc_cpp::ipc_types::RichPresence;
 
-int get_current_time_seconds() {
+int64_t get_current_time_seconds() {
   auto now = std::chrono::system_clock::now();
   auto now_c = std::chrono::system_clock::to_time_t(now);
 
@@ -36,7 +36,9 @@ std::string to_lower(const std::string& input) {
 
   std::transform(
     output.begin(), output.end(), output.begin(),
-    [](const auto& ch) { return std::tolower(ch); });
+    [](const auto& ch) {
+      return std::tolower(static_cast<unsigned char>(ch));
+    });
 
   return output;
 }
@@ -47,7 +49,7 @@ std::string clamp_string(const std::string& input) {
   if (clamped.length() <= 2) {
     clamped += std::string(3 - clamped.length(), ' ');
   } else if (clamped.length() >= 128) {
-    clamped = clamped.replace(125, 128, "...");
+    clamped = clamped.replace(125, clamped.length(), "...");
   }
 
   return clamped;
@@ -62,9 +64,9 @@ RichPresence construct_presence(const MusicPlayerInfo& player_info) {
   };
 
   if (player_info.total_time.has_value()) {
-    int player_time_s = std::round(player_info.total_time.value() / 1000.);
-    int start_time = get_current_time_seconds();
-    int end_time = get_current_time_seconds() + player_time_s;
+    int64_t player_time_s = std::round(player_info.total_time.value() / 1000.);
+    int64_t start_time = get_current_time_seconds();
+    int64_t end_time = get_current_time_seconds() + player_time_s;
 
     presence.timestamps = {
       .start = start_time,
@@ -72,23 +74,10 @@ RichPresence construct_presence(const MusicPlayerInfo& player_info) {
     };
   }
 
-  if (player_info.name.has_value()) {
-    presence.details = clamp_string(player_info.name.value());
-  } else {
-    presence.details = "Unknown song";
-  }
-
-  if (player_info.artist.has_value()) {
-    presence.state = clamp_string(player_info.artist.value());
-  } else {
-    presence.state = "Unknown artist";
-  }
-
-  if (player_info.album.has_value()) {
-    presence.assets->large_text = clamp_string(player_info.album.value());
-  } else {
-    presence.assets->large_text = "Unknown album";
-  }
+  presence.details = clamp_string(player_info.name.value_or("Unknown song"));
+  presence.state = clamp_string(player_info.artist.value_or("Unknown artist"));
+  presence.assets->large_text = clamp_string(
+    player_info.album.value_or("Unknown album"));
 
   return presence;
 }
