@@ -20,9 +20,11 @@
 + (NotificationCenterBinder*)shared {
   static NotificationCenterBinder* _shared = nil;
 
-  if (!_shared) {
+  static dispatch_once_t once;
+
+  dispatch_once(&once, ^{
     _shared = [[NotificationCenterBinder alloc] init];
-  }
+  });
 
   return _shared;
 }
@@ -52,8 +54,6 @@
 - (void)dealloc {
   [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
   [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-
-  [super dealloc];
 }
 
 - (void)set_player_callback:(t_player_info_callback)callback {
