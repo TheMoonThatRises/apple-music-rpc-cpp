@@ -116,8 +116,7 @@
     return;
   }
 
-  NSTextCheckingResult *firstMatch = [regex
-    firstMatchInString:bundleId
+  NSTextCheckingResult *firstMatch = [regex firstMatchInString:bundleId
     options:0
     range:searchRange
   ];

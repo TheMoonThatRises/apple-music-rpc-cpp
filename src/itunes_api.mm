@@ -58,7 +58,7 @@
       NSHTTPURLResponse* http_response = (NSHTTPURLResponse*) response;
 
       dispatch_async(dispatch_get_main_queue(), ^{
-        if (http_response.statusCode == 200 && data.length > 0) {
+        if ([http_response statusCode] == 200 && [data length] > 0) {
           std::string response_string((const char*)[data bytes], [data length]);
 
           ITunesSongResults itunes_results = ITunesSongResults::from_string(

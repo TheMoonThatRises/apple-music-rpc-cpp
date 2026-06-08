@@ -13,6 +13,8 @@
 
 #include "include/music_types.hpp"
 
+#include <utility>
+
 namespace objc_bridge {
 void bind_music_player_info(t_player_info_callback callback) {
   [[NotificationCenterBinder shared] set_player_callback:callback];
