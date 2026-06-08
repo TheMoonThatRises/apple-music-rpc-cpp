@@ -9,12 +9,15 @@
 #define INCLUDE_APPLE_MUSIC_H_
 
 #import <Foundation/Foundation.h>
+#import <bridge/include/Music.h>
 
 #include <string>
 
 #include "include/music_types.hpp"
 
 @interface AppleMusic : NSObject
+
++ (MusicApplication*)music_application;  // NOLINT(readability/casting)
 
 + (double)retrieve_playback_info;  // NOLINT(readability/casting)
 

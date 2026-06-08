@@ -65,7 +65,7 @@
             response_string
           );
 
-          callback(itunes_results);
+          callback(std::move(itunes_results));
         } else {
           NSLog(@"Unable to retrieve iTunes API data: %@", error);
 

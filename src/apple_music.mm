@@ -19,10 +19,22 @@
 
 @implementation AppleMusic
 
++ (MusicApplication*)music_application {
+  static MusicApplication* _music_application = nil;
+
+  static dispatch_once_t once;
+
+  dispatch_once(&once, ^{
+    _music_application = [SBApplication
+      applicationWithBundleIdentifier:@"com.apple.Music"
+    ];
+  });
+
+  return _music_application;
+}
+
 + (double)retrieve_playback_info {
-  MusicApplication* music = [SBApplication
-    applicationWithBundleIdentifier:@"com.apple.Music"
-  ];
+  MusicApplication* music = [AppleMusic music_application];
 
   if ([music playerState] == MusicEPlSPlaying) {
     return [music playerPosition];
@@ -32,13 +44,11 @@
 }
 
 + (MusicPlayerInfo)retrieve_current_player_info {
-  MusicApplication* music = [SBApplication
-    applicationWithBundleIdentifier:@"com.apple.Music"
-  ];
+  MusicApplication* music = [AppleMusic music_application];
 
   MusicPlayerInfo playerInfo {};
 
-  if (!music.isRunning) {
+  if (![music isRunning]) {
     playerInfo.player_state = "Stopped";
 
     return playerInfo;

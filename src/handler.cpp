@@ -36,14 +36,14 @@ void Handler::set_presence() {
   _has_presence = true;
 }
 
-void Handler::itunes_callback(const ITunesSongResults& result) {
-  _song_result = result;
+void Handler::itunes_callback(ITunesSongResults result) {
+  static const std::regex remove_paren_regex("\\(.*\\)$");
+
+  _song_result = std::move(result);
 
   const ITunesSong* song = nullptr;
 
   if (_song_result.result_count > 0) {
-    std::regex remove_paren_regex("\\(.*\\)$");
-
     std::string match_album_lower = to_lower(_player_info.album.value_or(""));
     std::string match_track_lower = to_lower(_player_info.name.value_or(""));
 
@@ -159,7 +159,7 @@ void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
     _player_info.name.value_or(""),
     _player_info.artist.value_or(""),
     _player_info.album.value_or(""),
-    [this](const auto& result) {
-      this->itunes_callback(result);
+    [this](auto result) {
+      this->itunes_callback(std::move(result));
     });
 }

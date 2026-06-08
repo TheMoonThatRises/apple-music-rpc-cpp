@@ -8,9 +8,10 @@
 #include "include/music_types.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
+#include <utility>
 
 #include <discord_ipc_cpp/json.hpp>
 #include <discord_ipc_cpp/parser.hpp>
@@ -87,6 +88,6 @@ ITunesSongResults ITunesSongResults::from_string(const std::string& data) {
 
   return {
     .result_count = result_count,
-    .results = results
+    .results = std::move(results)
   };
 }

@@ -12,9 +12,9 @@
 
 #include "include/music_types.hpp"
 
-typedef std::function<void(const MusicPlayerInfo&)> t_player_info_callback;
+typedef std::function<void(MusicPlayerInfo)> t_player_info_callback;
 
-typedef std::function<void(const ITunesSongResults&)> t_itunes_songs_callback;
+typedef std::function<void(ITunesSongResults)> t_itunes_songs_callback;
 
 typedef std::function<void()> t_discord_launch_callback;
 

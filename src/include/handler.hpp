@@ -28,7 +28,7 @@ class Handler {
   void set_presence();
 
  protected:
-  void itunes_callback(const ITunesSongResults& result);
+  void itunes_callback(ITunesSongResults result);
   void set_accurate_time();
 
  public:
