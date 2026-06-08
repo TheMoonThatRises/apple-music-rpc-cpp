@@ -36,6 +36,7 @@ ITunesSong ITunesSong::from_json(const JSON& data) {
     .artist_id = get.operator()<JSONInt>("artistId"),
     .collection_id = get.operator()<JSONInt>("collectionId"),
     .track_id = get.operator()<JSONInt>("trackId"),
+    .artist_name = get.operator()<JSONString>("artistName"),
     .collection_name = get.operator()<JSONString>("collectionName"),
     .track_name = get.operator()<JSONString>("trackName"),
     .collection_censored_name = get.template
@@ -71,10 +72,14 @@ ITunesSong ITunesSong::from_json(const JSON& data) {
 ITunesSongResults ITunesSongResults::from_string(const std::string& data) {
   JSON json_data = Parser::parse(data);
 
+  if (!json_data.has("resultCount")) {
+    return {};
+  }
+
   int result_count = json_data["resultCount"].as<JSONInt>();
 
   JSONArray results_json = json_data["results"].as<JSONArray>();
-  std::vector<ITunesSong> results(result_count);
+  std::vector<ITunesSong> results(results_json.size());
 
   std::transform(
     results_json.cbegin(), results_json.cend(), results.begin(),
