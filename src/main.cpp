@@ -23,6 +23,8 @@ using objc_bridge::run_cf_main_loop;
 int main() {
   std::string music_client_id = "1430370823801274418";  // apple music
 
+  std::cout << "Connecting to IPC socket" << std::endl;
+
   DiscordIPCClient client(music_client_id);
   Handler handler(client);
 
