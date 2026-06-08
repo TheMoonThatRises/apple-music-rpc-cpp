@@ -20,27 +20,32 @@
         artist:(const std::string*)artist_name
         album:(const std::string*)album_name
         callback:(t_itunes_songs_callback)callback {
-  NSString* query = [NSString
+  NSString* query_string = [NSString
     stringWithFormat:@"%@ %@ %@",
     [NSString stringWithUTF8String:song_name->c_str()],
     [NSString stringWithUTF8String:artist_name->c_str()],
     [NSString stringWithUTF8String:album_name->c_str()]
   ];
-  NSString* encoded_query = [query
-    stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet
-      URLQueryAllowedCharacterSet
-    ]
-  ];
 
-  NSString* base_path = @"https://itunes.apple.com";
-  NSString* url_string = [NSString
-    stringWithFormat:@"%@/search?term=%@&media=music&entity=song",
-    base_path,
-    encoded_query
+  NSDictionary *queryDictionary = @{
+    @"term": query_string,
+    @"media": @"music",
+    @"entity": @"song"
+  };
+
+  NSURLComponents *url_components = [NSURLComponents
+    componentsWithString:@"https://itunes.apple.com/search"
   ];
+  NSMutableArray *queryItems = [NSMutableArray array];
+  for (NSString *key in queryDictionary) {
+      [queryItems addObject:[NSURLQueryItem
+        queryItemWithName:key value:queryDictionary[key]
+      ]];
+  }
+  url_components.queryItems = queryItems;
 
   NSMutableURLRequest* url_request = [[NSMutableURLRequest alloc]
-    initWithURL:[NSURL URLWithString:url_string]
+    initWithURL:url_components.URL
   ];
 
   [url_request setHTTPMethod:@"GET"];
@@ -52,19 +57,21 @@
     completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
       NSHTTPURLResponse* http_response = (NSHTTPURLResponse*) response;
 
-      if (http_response.statusCode == 200) {
-        std::string response_string((const char*)[data bytes], [data length]);
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (http_response.statusCode == 200) {
+          std::string response_string((const char*)[data bytes], [data length]);
 
-        ITunesSongResults itunes_results = ITunesSongResults::from_string(
-          response_string
-        );
+          ITunesSongResults itunes_results = ITunesSongResults::from_string(
+            response_string
+          );
 
-        callback(itunes_results);
-      } else {
-        NSLog(@"Unable to retrieve iTunes API data: %@", error);
+          callback(itunes_results);
+        } else {
+          NSLog(@"Unable to retrieve iTunes API data: %@", error);
 
-        callback({});
-      }
+          callback({});
+        }
+      });
     }
   ];
 
