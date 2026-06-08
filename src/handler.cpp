@@ -78,11 +78,11 @@ void Handler::itunes_callback(ITunesSongResults result) {
 void Handler::set_accurate_time() {
   if (_player_info.total_time.has_value()) {
     int song_length = std::round(_player_info.total_time.value() / 1000);
-    int current_time = get_current_time_seconds();
+    int64_t current_time = get_current_time_seconds();
 
     int current_song_time = std::round(get_music_playback_info());
 
-    int start_time = 2 * get_current_time_seconds()
+    int64_t start_time = 2 * get_current_time_seconds()
       - current_time - current_song_time;
 
     _presence.timestamps->start = start_time;
