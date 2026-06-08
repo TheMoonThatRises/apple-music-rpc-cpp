@@ -10,20 +10,14 @@
 #import <Foundation/Foundation.h>
 #import <bridge/include/Music.h>
 
+#import "include/objc_convert.h"
+
 #include <string>
 #include <optional>
 
 #include "include/music_types.hpp"
 
 @implementation AppleMusic
-
-+ (void)set_safe_string:(std::optional<std::string>*)field from_item:(id)item {
-  if (item && [item isKindOfClass:[NSString class]]) {
-    *field = [(NSString*)item UTF8String];
-  } else {
-    *field = std::nullopt;
-  }
-}
 
 + (double)retrieve_playback_info {
   MusicApplication* music = [SBApplication
@@ -57,12 +51,9 @@
   if ([music playerState] == MusicEPlSPlaying) {
     MusicTrack* currentTrack = [music currentTrack];
 
-    [AppleMusic set_safe_string:&playerInfo.album
-      from_item:[currentTrack album]];
-    [AppleMusic set_safe_string:&playerInfo.artist
-      from_item:[currentTrack artist]];
-    [AppleMusic set_safe_string:&playerInfo.name
-      from_item:[currentTrack name]];
+    playerInfo.album = to_optional_string([currentTrack album]);
+    playerInfo.artist = to_optional_string([currentTrack artist]);
+    playerInfo.name = to_optional_string([currentTrack name]);
     playerInfo.total_time = [currentTrack duration] * 1000;
   }
 

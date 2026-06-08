@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-#import "include/apple_music.h"
+#import "include/objc_convert.h"
 
 #include "include/callback_types.hpp"
 #include "include/music_types.hpp"
@@ -33,15 +33,13 @@
   self = [super init];
 
   if (self) {
-    [[NSDistributedNotificationCenter defaultCenter]
-      addObserver:self
+    [[NSDistributedNotificationCenter defaultCenter] addObserver:self
       selector:@selector(receive_player_info_update:)
       name:@"com.apple.Music.playerInfo"
       object:nil
     ];
 
-    [[[NSWorkspace sharedWorkspace] notificationCenter]
-      addObserver:self
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
       selector:@selector(receive_discord_launch_notif:)
       name:NSWorkspaceDidLaunchApplicationNotification
       object:nil
@@ -74,18 +72,13 @@
   MusicPlayerInfo playerInfo {};
 
   if (userInfo) {
-    [AppleMusic set_safe_string:&playerInfo.album
-      from_item:userInfo[@"Album"]];
-    [AppleMusic set_safe_string:&playerInfo.artist
-      from_item:userInfo[@"Artist"]];
-    [AppleMusic set_safe_string:&playerInfo.composer
-      from_item:userInfo[@"Composer"]];
-    [AppleMusic set_safe_string:&playerInfo.name
-      from_item:userInfo[@"Name"]];
-    [AppleMusic set_safe_string:&playerInfo.player_state
-          from_item:userInfo[@"Player State"]];
-    [AppleMusic set_safe_string:&playerInfo.library_persistent_id
-          from_item:userInfo[@"Library PersistentID"]];
+    playerInfo.album = to_optional_string(userInfo[@"Album"]);
+    playerInfo.artist = to_optional_string(userInfo[@"Artist"]);
+    playerInfo.composer = to_optional_string(userInfo[@"Composer"]);
+    playerInfo.name = to_optional_string(userInfo[@"Name"]);
+    playerInfo.player_state = to_optional_string(userInfo[@"Player State"]);
+    playerInfo.library_persistent_id = to_optional_string(
+      userInfo[@"Library PersistentID"]);
 
     if (userInfo[@"Total Time"]) {
       playerInfo.total_time = [userInfo[@"Total Time"] intValue];

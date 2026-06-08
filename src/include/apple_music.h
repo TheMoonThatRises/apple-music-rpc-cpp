@@ -16,9 +16,6 @@
 
 @interface AppleMusic : NSObject
 
-+ (void)set_safe_string:(std::optional<std::string>*)field
-        from_item:(NSString*)item;  // NOLINT(readability/casting)
-
 + (double)retrieve_playback_info;  // NOLINT(readability/casting)
 
 + (MusicPlayerInfo)retrieve_current_player_info;

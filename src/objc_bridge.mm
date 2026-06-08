@@ -34,11 +34,10 @@ void get_itunes_result(const std::string& song_name,
                        const std::string& artist_name,
                        const std::string& album_name,
                        t_itunes_songs_callback callback) {
-  [ITunesAPI
-    get_itunes_result:&song_name
-    artist:&artist_name
-    album:&album_name
-    callback:callback
+  [ITunesAPI get_itunes_result:song_name
+    artist:artist_name
+    album:album_name
+    callback:std::move(callback)
   ];
 }
 

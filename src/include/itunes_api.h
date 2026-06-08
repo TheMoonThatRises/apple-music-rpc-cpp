@@ -16,9 +16,9 @@
 
 @interface ITunesAPI : NSObject
 
-+ (void)get_itunes_result:(const std::string*)song_name
-        artist:(const std::string*)artist_name
-        album:(const std::string*)album_name
++ (void)get_itunes_result:(const std::string&)song_name
+        artist:(const std::string&)artist_name
+        album:(const std::string&)album_name
         callback:(const t_itunes_songs_callback)callback;
 
 @end

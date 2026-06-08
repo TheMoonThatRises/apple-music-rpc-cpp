@@ -14,6 +14,7 @@ set(OBJCXX_SOURCES
   src/itunes_api.mm
   src/notif_binder.mm
   src/objc_bridge.mm
+  src/objc_convert.mm
 )
 
 add_executable(apple_music_rpc_cpp
