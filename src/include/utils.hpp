@@ -15,7 +15,7 @@
 
 #include "include/music_types.hpp"
 
-int64_t get_current_time_seconds();
+uint64_t get_current_time_millis();
 
 std::string to_lower(const std::string& input);
 

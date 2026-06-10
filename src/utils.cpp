@@ -24,11 +24,9 @@ using discord_ipc_cpp::DiscordIPCClient;
 
 using discord_ipc_cpp::ipc_types::RichPresence;
 
-int64_t get_current_time_seconds() {
-  auto now = std::chrono::system_clock::now();
-  auto now_c = std::chrono::system_clock::to_time_t(now);
-
-  return now_c;
+uint64_t get_current_time_millis() {
+  return std::chrono::duration_cast<std::chrono::milliseconds>(
+    std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 std::string to_lower(const std::string& input) {
@@ -65,8 +63,8 @@ RichPresence construct_presence(const MusicPlayerInfo& player_info) {
 
   if (player_info.total_time.has_value()) {
     int64_t player_time_s = std::round(player_info.total_time.value() / 1000.);
-    int64_t start_time = get_current_time_seconds();
-    int64_t end_time = get_current_time_seconds() + player_time_s;
+    int64_t start_time = get_current_time_millis() / 1000;
+    int64_t end_time = (get_current_time_millis() / 1000) + player_time_s;
 
     presence.timestamps = {
       .start = start_time,

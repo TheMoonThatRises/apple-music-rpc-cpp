@@ -18,6 +18,23 @@
 
 @implementation ITunesAPI
 
++ (NSURLSession*)session {
+  static NSURLSession* _session;
+
+  static dispatch_once_t once;
+
+  dispatch_once(&once, ^{
+    NSURLSessionConfiguration* config = [
+      NSURLSessionConfiguration defaultSessionConfiguration];
+    config.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+    config.URLCache = nil;
+
+    _session = [NSURLSession sessionWithConfiguration:config];
+  });
+
+  return _session;
+}
+
 + (void)get_itunes_result:(const std::string&)song_name
         artist:(const std::string&)artist_name
         album:(const std::string&)album_name
@@ -51,9 +68,8 @@
 
   [url_request setHTTPMethod:@"GET"];
 
-  NSURLSession* session = [NSURLSession sharedSession];
-
-  NSURLSessionDataTask* data_task = [session dataTaskWithRequest:url_request
+  NSURLSessionDataTask* data_task = [
+    [self session] dataTaskWithRequest:url_request
     completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
       NSHTTPURLResponse* http_response = (NSHTTPURLResponse*) response;
 

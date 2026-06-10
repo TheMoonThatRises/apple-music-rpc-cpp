@@ -10,6 +10,7 @@
 
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 
+#include "include/artwork_cache.hpp"
 #include "include/utils.hpp"
 #include "include/handler.hpp"
 #include "include/objc_bridge.hpp"
@@ -25,8 +26,9 @@ int main() {
 
   std::cout << "Connecting to IPC socket" << std::endl;
 
+  ArtworkCache artworkCache("cache.sqlite3", 1000);
   DiscordIPCClient client(music_client_id);
-  Handler handler(client);
+  Handler handler(client, artworkCache);
 
   handler.attempt_discord_connect(false);
 

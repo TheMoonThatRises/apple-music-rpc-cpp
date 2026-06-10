@@ -16,6 +16,8 @@
 
 @interface ITunesAPI : NSObject
 
++ (NSURLSession*)session;  // NOLINT(readability/casting)
+
 + (void)get_itunes_result:(const std::string&)song_name
         artist:(const std::string&)artist_name
         album:(const std::string&)album_name

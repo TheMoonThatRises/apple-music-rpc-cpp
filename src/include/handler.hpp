@@ -11,10 +11,12 @@
 #include <discord_ipc_cpp/discord_ipc_client.hpp>
 #include <discord_ipc_cpp/ipc_types.hpp>
 
+#include "include/artwork_cache.hpp"
 #include "include/music_types.hpp"
 
 class Handler {
  private:
+  ArtworkCache& _artworkCache;
   discord_ipc_cpp::DiscordIPCClient& _client;
 
   discord_ipc_cpp::ipc_types::RichPresence _presence;
@@ -27,12 +29,15 @@ class Handler {
   void set_empty_presence();
   void set_presence();
 
+  void update_presence_assets(const ITunesSong& song);
+
  protected:
   void itunes_callback(ITunesSongResults result);
   void set_accurate_time();
 
  public:
-  explicit Handler(discord_ipc_cpp::DiscordIPCClient& client);
+  explicit Handler(
+    discord_ipc_cpp::DiscordIPCClient& client, ArtworkCache& artworkCache);
 
   void attempt_discord_connect(bool should_attempt);
 

@@ -14,6 +14,7 @@
 #include <string>
 #include <utility>
 
+#include "include/artwork_cache.hpp"
 #include "include/utils.hpp"
 #include "include/music_types.hpp"
 #include "include/objc_bridge.hpp"
@@ -36,16 +37,27 @@ void Handler::set_presence() {
   _has_presence = true;
 }
 
+void Handler::update_presence_assets(const ITunesSong& song) {
+  _presence.details_url = song.track_view_url;
+  _presence.state_url = song.artist_view_url;
+  _presence.assets->large_image = song.artwork_url_100;
+  _presence.assets->large_url = song.collection_view_url;
+}
+
 void Handler::itunes_callback(ITunesSongResults result) {
   static const std::regex remove_paren_regex("\\(.*\\)$");
 
   _song_result = std::move(result);
 
+  std::string name = _player_info.name.value_or("");
+  std::string artist = _player_info.artist.value_or("");
+  std::string album = _player_info.album.value_or("");
+
   const ITunesSong* song = nullptr;
 
   if (_song_result.result_count > 0) {
-    std::string match_album_lower = to_lower(_player_info.album.value_or(""));
-    std::string match_track_lower = to_lower(_player_info.name.value_or(""));
+    std::string match_album_lower = to_lower(album);
+    std::string match_track_lower = to_lower(name);
 
     for (const auto& itunes_song : _song_result.results) {
       std::string collection_lower = to_lower(
@@ -65,11 +77,10 @@ void Handler::itunes_callback(ITunesSongResults result) {
     }
   }
 
+  _artworkCache.add_artwork(name, artist, album, song ? *song : ITunesSong{});
+
   if (song) {
-    _presence.details_url = song->track_view_url;
-    _presence.state_url = song->artist_view_url;
-    _presence.assets->large_image = song->artwork_url_100;
-    _presence.assets->large_url = song->collection_view_url;
+    update_presence_assets(*song);
   }
 
   set_presence();
@@ -78,11 +89,11 @@ void Handler::itunes_callback(ITunesSongResults result) {
 void Handler::set_accurate_time() {
   if (_player_info.total_time.has_value()) {
     int song_length = std::round(_player_info.total_time.value() / 1000);
-    int64_t current_time = get_current_time_seconds();
+    int64_t current_time = get_current_time_millis() / 1000;
 
     int current_song_time = std::round(get_music_playback_info());
 
-    int64_t start_time = 2 * get_current_time_seconds()
+    int64_t start_time = 2 * (get_current_time_millis() / 1000)
       - current_time - current_song_time;
 
     _presence.timestamps->start = start_time;
@@ -90,7 +101,11 @@ void Handler::set_accurate_time() {
   }
 }
 
-Handler::Handler(discord_ipc_cpp::DiscordIPCClient& client) :
+Handler::Handler(
+  discord_ipc_cpp::DiscordIPCClient& client,
+  ArtworkCache& artworkCache
+) :
+_artworkCache(artworkCache),
 _client(client),
 _presence({}),
 _player_info({}),
@@ -155,11 +170,23 @@ void Handler::music_player_binder(const MusicPlayerInfo& player_info) {
     return;
   }
 
-  get_itunes_result(
-    _player_info.name.value_or(""),
-    _player_info.artist.value_or(""),
-    _player_info.album.value_or(""),
-    [this](auto result) {
-      this->itunes_callback(std::move(result));
-    });
+  std::string name = _player_info.name.value_or("");
+  std::string artist = _player_info.artist.value_or("");
+  std::string album = _player_info.album.value_or("");
+
+  std::optional<ITunesSong> result = _artworkCache.get_artwork(
+    name, artist, album);
+
+  if (result.has_value()) {
+    update_presence_assets(result.value());
+    set_presence();
+  } else {
+    get_itunes_result(
+      name,
+      artist,
+      album,
+      [this](auto result) {
+        this->itunes_callback(std::move(result));
+      });
+  }
 }

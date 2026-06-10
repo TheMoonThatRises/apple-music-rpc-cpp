@@ -18,6 +18,7 @@ set(OBJCXX_SOURCES
 )
 
 add_executable(apple_music_rpc_cpp
+  src/artwork_cache.cpp
   src/main.cpp
   src/handler.cpp
   src/music_types.cpp
