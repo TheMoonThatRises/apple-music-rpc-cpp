@@ -25,22 +25,28 @@ void bind_discord_launch(t_discord_launch_callback callback) {
 }
 
 double get_music_playback_info() {
-  return [AppleMusic retrieve_playback_info];
+  @autoreleasepool {
+    return [AppleMusic retrieve_playback_info];
+  }
 }
 
 MusicPlayerInfo get_music_player_info() {
-  return [AppleMusic retrieve_current_player_info];
+  @autoreleasepool {
+    return [AppleMusic retrieve_current_player_info];
+  }
 }
 
 void get_itunes_result(const std::string& song_name,
                        const std::string& artist_name,
                        const std::string& album_name,
                        t_itunes_songs_callback callback) {
-  [ITunesAPI get_itunes_result:song_name
-    artist:artist_name
-    album:album_name
-    callback:std::move(callback)
-  ];
+  @autoreleasepool {
+    [ITunesAPI get_itunes_result:song_name
+      artist:artist_name
+      album:album_name
+      callback:std::move(callback)
+    ];
+  }
 }
 
 void run_cf_main_loop() {

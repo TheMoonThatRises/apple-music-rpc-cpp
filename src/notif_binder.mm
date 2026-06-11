@@ -67,29 +67,31 @@
     return;
   }
 
-  NSDictionary *userInfo = [notification userInfo];
+  @autoreleasepool {
+    NSDictionary* userInfo = [notification userInfo];
 
-  MusicPlayerInfo playerInfo {};
+    MusicPlayerInfo playerInfo {};
 
-  if (userInfo) {
-    playerInfo.album = to_optional_string(userInfo[@"Album"]);
-    playerInfo.artist = to_optional_string(userInfo[@"Artist"]);
-    playerInfo.composer = to_optional_string(userInfo[@"Composer"]);
-    playerInfo.name = to_optional_string(userInfo[@"Name"]);
-    playerInfo.player_state = to_optional_string(userInfo[@"Player State"]);
-    playerInfo.library_persistent_id = to_optional_string(
-      userInfo[@"Library PersistentID"]);
+    if (userInfo) {
+      playerInfo.album = to_optional_string(userInfo[@"Album"]);
+      playerInfo.artist = to_optional_string(userInfo[@"Artist"]);
+      playerInfo.composer = to_optional_string(userInfo[@"Composer"]);
+      playerInfo.name = to_optional_string(userInfo[@"Name"]);
+      playerInfo.player_state = to_optional_string(userInfo[@"Player State"]);
+      playerInfo.library_persistent_id = to_optional_string(
+        userInfo[@"Library PersistentID"]);
 
-    if (userInfo[@"Total Time"]) {
-      playerInfo.total_time = [userInfo[@"Total Time"] intValue];
+      if (userInfo[@"Total Time"]) {
+        playerInfo.total_time = [userInfo[@"Total Time"] intValue];
+      }
+
+      if (userInfo[@"PersistentID"]) {
+        playerInfo.persistent_id = [userInfo[@"PersistentID"] longLongValue];
+      }
     }
 
-    if (userInfo[@"PersistentID"]) {
-      playerInfo.persistent_id = [userInfo[@"PersistentID"] longLongValue];
-    }
+    self.player_info_callback(playerInfo);
   }
-
-  self.player_info_callback(playerInfo);
 }
 
 - (void)receive_discord_launch_notif:(NSNotification*)notification {
@@ -97,32 +99,38 @@
     return;
   }
 
-  NSDictionary* userInfo = [notification userInfo];
-  NSRunningApplication* app = userInfo[NSWorkspaceApplicationKey];
+  static NSRegularExpression* regex = nil;
 
-  NSString* bundleId = [app bundleIdentifier];
+  if (!regex) {
+    NSError* error = nil;
+    regex = [NSRegularExpression
+      regularExpressionWithPattern:@"^com\\.hnc\\.discord.*$"
+      options:NSRegularExpressionCaseInsensitive
+      error:&error
+    ];
 
-  NSString* regexSearchPattern = @"^com\\.hnc\\.discord.*$";
-  NSRange searchRange = NSMakeRange(0, [bundleId length]);
-  NSError *error = nil;
-  NSRegularExpression *regex = [NSRegularExpression
-    regularExpressionWithPattern:regexSearchPattern
-    options:NSRegularExpressionCaseInsensitive
-    error:&error
-  ];
+    if (error) {
+      NSLog(@"Failed to create regular expression: %@", error);
 
-  if (error) {
-    NSLog(@"Failed to create regular expression: %@", error);
-    return;
+      return;
+    }
   }
 
-  NSTextCheckingResult *firstMatch = [regex firstMatchInString:bundleId
-    options:0
-    range:searchRange
-  ];
+  @autoreleasepool {
+    NSDictionary* userInfo = [notification userInfo];
+    NSRunningApplication* app = userInfo[NSWorkspaceApplicationKey];
 
-  if (firstMatch) {
-    self.discord_launch_callback();
+    NSString* bundleId = [app bundleIdentifier];
+
+    NSRange searchRange = NSMakeRange(0, [bundleId length]);
+    NSTextCheckingResult* firstMatch = [regex firstMatchInString:bundleId
+      options:0
+      range:searchRange
+    ];
+
+    if (firstMatch) {
+      self.discord_launch_callback();
+    }
   }
 }
 
