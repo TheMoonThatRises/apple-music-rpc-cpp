@@ -32,7 +32,7 @@ class ArtworkCache {
     const std::string& album);
 
  public:
-  ArtworkCache(size_t max_cache_size);
+  explicit ArtworkCache(size_t max_cache_size);
 
   void add_artwork(
     const std::string& name,
