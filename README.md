@@ -6,6 +6,7 @@ Inspired by [Nextfire/apple-music-discord-rpc](https://github.com/NextFire/apple
 
 ## Features
 
+- **Not vibe-coded**: made with real human sweat and tears
 - Zero external dependencies: fully self-contained, with a purpose-built Discord IPC layer (`discord_ipc_cpp`) instead of bundled third-party libraries
 - Event-driven instead of polling: directly hooks into Apple Music through Scripting Bridge, meaning track changes are instantly pushed
 - Survives Discord relaunch: detects Discord launch and termination, ensuring the current track is always relayed
