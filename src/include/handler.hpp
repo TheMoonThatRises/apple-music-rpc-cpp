@@ -21,7 +21,6 @@ class Handler {
 
   discord_ipc_cpp::ipc_types::RichPresence _presence;
   MusicPlayerInfo _player_info;
-  ITunesSongResults _song_result;
 
   bool _has_presence;
 

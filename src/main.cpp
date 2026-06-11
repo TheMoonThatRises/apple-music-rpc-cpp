@@ -26,7 +26,7 @@ int main() {
 
   std::cout << "Connecting to IPC socket" << std::endl;
 
-  ArtworkCache artworkCache("cache.sqlite3", 1000);
+  ArtworkCache artworkCache(256);
   DiscordIPCClient client(music_client_id);
   Handler handler(client, artworkCache);
 

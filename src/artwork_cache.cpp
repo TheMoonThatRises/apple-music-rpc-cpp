@@ -72,14 +72,6 @@ std::string ArtworkCache::encode_cache_data(const ITunesSong& data) {
     collection_view_url);
 }
 
-// void ArtworkCache::read_cache_file() {
-
-// }
-
-// void ArtworkCache::write_cache_file() {
-
-// }
-
 std::string ArtworkCache::generate_key(
   const std::string& name,
   const std::string& artist,
@@ -89,15 +81,9 @@ std::string ArtworkCache::generate_key(
 }
 
 
-ArtworkCache::ArtworkCache(
-  const std::string& cache_file,
-  size_t max_cache_size
-) :
-_cache_file(cache_file),
+ArtworkCache::ArtworkCache(size_t max_cache_size) :
 _max_cache_size(max_cache_size) {
   _recency_cache.reserve(_max_cache_size);
-
-  // read_cache_file();
 }
 
 void ArtworkCache::add_artwork(

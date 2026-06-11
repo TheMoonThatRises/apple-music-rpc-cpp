@@ -47,7 +47,7 @@ void Handler::update_presence_assets(const ITunesSong& song) {
 void Handler::itunes_callback(ITunesSongResults result) {
   static const std::regex remove_paren_regex("\\(.*\\)$");
 
-  _song_result = std::move(result);
+  ITunesSongResults song_result = std::move(result);
 
   std::string name = _player_info.name.value_or("");
   std::string artist = _player_info.artist.value_or("");
@@ -55,11 +55,11 @@ void Handler::itunes_callback(ITunesSongResults result) {
 
   const ITunesSong* song = nullptr;
 
-  if (_song_result.result_count > 0) {
+  if (song_result.result_count > 0) {
     std::string match_album_lower = to_lower(album);
     std::string match_track_lower = to_lower(name);
 
-    for (const auto& itunes_song : _song_result.results) {
+    for (const auto& itunes_song : song_result.results) {
       std::string collection_lower = to_lower(
         itunes_song.collection_name.value_or(""));
       std::string strip_collection = std::regex_replace(
@@ -109,7 +109,6 @@ _artworkCache(artworkCache),
 _client(client),
 _presence({}),
 _player_info({}),
-_song_result({}),
 _has_presence(true) {}
 
 void Handler::attempt_discord_connect(bool should_attempt) {

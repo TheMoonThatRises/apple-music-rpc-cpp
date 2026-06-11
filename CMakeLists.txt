@@ -37,6 +37,14 @@ target_compile_options(apple_music_rpc_cpp PRIVATE
 
   -O3
   -pthread
+  -flto
+  -fvisibility=hidden
+)
+
+target_link_options(apple_music_rpc_cpp PRIVATE
+  -flto
+  -Wl,-dead_strip
+  -Wl,-x
 )
 
 set_source_files_properties(${OBJCXX_SOURCES} PROPERTIES
