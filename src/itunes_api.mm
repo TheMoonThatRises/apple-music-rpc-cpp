@@ -25,8 +25,9 @@
 
   dispatch_once(&once, ^{
     NSURLSessionConfiguration* config = [
-      NSURLSessionConfiguration defaultSessionConfiguration];
-    config.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+      NSURLSessionConfiguration ephemeralSessionConfiguration];
+    config.HTTPCookieStorage = nil;
+    config.URLCredentialStorage = nil;
     config.URLCache = nil;
 
     _session = [NSURLSession sessionWithConfiguration:config];

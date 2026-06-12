@@ -99,36 +99,13 @@
     return;
   }
 
-  static NSRegularExpression* regex = nil;
-
-  if (!regex) {
-    NSError* error = nil;
-    regex = [NSRegularExpression
-      regularExpressionWithPattern:@"^com\\.hnc\\.discord.*$"
-      options:NSRegularExpressionCaseInsensitive
-      error:&error
-    ];
-
-    if (error) {
-      NSLog(@"Failed to create regular expression: %@", error);
-
-      return;
-    }
-  }
-
   @autoreleasepool {
     NSDictionary* userInfo = [notification userInfo];
     NSRunningApplication* app = userInfo[NSWorkspaceApplicationKey];
 
     NSString* bundleId = [app bundleIdentifier];
 
-    NSRange searchRange = NSMakeRange(0, [bundleId length]);
-    NSTextCheckingResult* firstMatch = [regex firstMatchInString:bundleId
-      options:0
-      range:searchRange
-    ];
-
-    if (firstMatch) {
+    if ([bundleId localizedCaseInsensitiveContainsString:@"com.hnc.discord"]) {
       self.discord_launch_callback();
     }
   }

@@ -7,6 +7,8 @@
 
 #include "include/artwork_cache.hpp"
 
+#include <malloc/malloc.h>
+
 #include <cmath>
 #include <format>
 #include <fstream>
@@ -104,7 +106,7 @@ void ArtworkCache::add_artwork(
   _recency_cache.push_back(key);
 
   if (_recency_cache.size() > _max_cache_size) {
-    size_t prune_to = std::round(_max_cache_size * 0.7);
+    size_t prune_to = std::round(_max_cache_size * 0.5);
     size_t remove_count = _recency_cache.size() - prune_to;
 
     auto first = _recency_cache.begin();
@@ -115,6 +117,8 @@ void ArtworkCache::add_artwork(
     }
 
     _recency_cache.erase(first, last);
+
+    malloc_zone_pressure_relief(NULL, 0);
   }
 }
 

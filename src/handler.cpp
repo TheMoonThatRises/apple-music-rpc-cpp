@@ -115,6 +115,8 @@ void Handler::attempt_discord_connect(bool should_attempt) {
   int max_attempts = should_attempt ? 5 : 1;
   int attempts = 0;
 
+  _client.close(false);
+
   while (attempts < max_attempts) {
     std::cout << "Attempting to connect to Discord "
               << "(" << attempts + 1 << "/" << max_attempts << ")"
