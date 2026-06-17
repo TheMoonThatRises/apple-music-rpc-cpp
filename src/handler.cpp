@@ -8,7 +8,6 @@
 #include "include/handler.hpp"
 
 #include <iostream>
-#include <regex>
 #include <cmath>
 #include <thread>
 #include <string>
@@ -45,8 +44,6 @@ void Handler::update_presence_assets(const ITunesSong& song) {
 }
 
 void Handler::itunes_callback(ITunesSongResults result) {
-  static const std::regex remove_paren_regex("\\(.*\\)$");
-
   ITunesSongResults song_result = std::move(result);
 
   std::string name = _player_info.name.value_or("");
@@ -62,8 +59,7 @@ void Handler::itunes_callback(ITunesSongResults result) {
     for (const auto& itunes_song : song_result.results) {
       std::string collection_lower = to_lower(
         itunes_song.collection_name.value_or(""));
-      std::string strip_collection = std::regex_replace(
-        collection_lower, remove_paren_regex, "");
+      std::string strip_collection = strip_trailing_parens(collection_lower);
       std::string track_lower = to_lower(itunes_song.track_name.value_or(""));
 
       if ((collection_lower.find(match_album_lower) != std::string::npos ||

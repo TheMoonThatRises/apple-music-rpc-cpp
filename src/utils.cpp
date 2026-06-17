@@ -53,6 +53,20 @@ std::string clamp_string(const std::string& input) {
   return clamped;
 }
 
+std::string strip_trailing_parens(const std::string& input) {
+  if (input.empty() || !input.ends_with(')')) {
+    return input;
+  }
+
+  auto paren_pos = input.find_last_of('(');
+
+  if (paren_pos == std::string::npos) {
+    return input;
+  }
+
+  return input.substr(0, paren_pos);
+}
+
 RichPresence construct_presence(const MusicPlayerInfo& player_info) {
   RichPresence presence = {
     .name = "Apple Music",

@@ -21,6 +21,8 @@ std::string to_lower(const std::string& input);
 
 std::string clamp_string(const std::string& input);
 
+std::string strip_trailing_parens(const std::string& input);
+
 discord_ipc_cpp::ipc_types::RichPresence construct_presence(
   const MusicPlayerInfo& player_info);
 
