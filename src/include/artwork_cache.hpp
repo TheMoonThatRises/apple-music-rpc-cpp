@@ -17,10 +17,18 @@
 
 class ArtworkCache {
  private:
+  struct Node {
+    std::string key;
+    std::string value;
+    Node *next = nullptr;
+    Node *prev = nullptr;
+  };
+
+ private:
   const size_t _max_cache_size;
 
-  std::vector<std::string> _recency_cache;
-  std::map<std::string, std::string> _data_cache;
+  Node *_head;
+  std::map<std::string, Node*> _data_list;
 
  protected:
   static ITunesSong parse_cache_data(const std::string& data);
@@ -31,8 +39,13 @@ class ArtworkCache {
     const std::string& artist,
     const std::string& album);
 
+  void removeNode(Node *node);
+  void insertNodeHead(Node *node);
+  static void deallocateNode(Node *node);
+
  public:
   explicit ArtworkCache(size_t max_cache_size);
+  ~ArtworkCache();
 
   void add_artwork(
     const std::string& name,

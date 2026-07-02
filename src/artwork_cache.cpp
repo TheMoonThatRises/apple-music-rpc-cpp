@@ -83,9 +83,53 @@ std::string ArtworkCache::generate_key(
 }
 
 
+void ArtworkCache::removeNode(Node *node) {
+  node->prev->next = node->next;
+  node->next->prev = node->prev;
+
+  if (node == _head) {
+    if (node == node->next) {
+      _head = nullptr;
+    } else {
+      _head = node->next;
+    }
+  }
+}
+
+void ArtworkCache::insertNodeHead(Node *node) {
+  if (_head) {
+    node->next = _head;
+    node->prev = _head->prev;
+
+    _head->prev->next = node;
+    _head->prev = node;
+  } else {
+    node->prev = node;
+    node->next = node;
+  }
+
+  _head = node;
+}
+
+void ArtworkCache::deallocateNode(Node *node) {
+  node->next = nullptr;
+  node->prev = nullptr;
+  free(node);
+}
+
 ArtworkCache::ArtworkCache(size_t max_cache_size) :
-_max_cache_size(max_cache_size) {
-  _recency_cache.reserve(_max_cache_size);
+_max_cache_size(max_cache_size),
+_head(nullptr) {
+}
+
+ArtworkCache::~ArtworkCache() {
+  for (auto [key, node] : _data_list) {
+    removeNode(node);
+    deallocateNode(node);
+  }
+
+  _data_list.clear();
+  _head = nullptr;
 }
 
 void ArtworkCache::add_artwork(
@@ -97,29 +141,33 @@ void ArtworkCache::add_artwork(
   std::string key = generate_key(name, artist, album);
   std::string value = encode_cache_data(result);
 
-  if (_data_cache.count(key)) {
-    _recency_cache.erase(
-      std::find(_recency_cache.begin(), _recency_cache.end(), key));
-  }
+  auto elements = _data_list.find(key);
+  Node* node;
 
-  _data_cache.insert_or_assign(key, value);
-  _recency_cache.push_back(key);
+  if (elements != _data_list.end()) {
+    node = elements->second;
 
-  if (_recency_cache.size() > _max_cache_size) {
-    size_t prune_to = std::round(_max_cache_size * 0.5);
-    size_t remove_count = _recency_cache.size() - prune_to;
+    node->value = value;
 
-    auto first = _recency_cache.begin();
-    auto last = first + remove_count;
-
-    for (auto it = first; it != last; ++it) {
-      _data_cache.erase(*it);
+    removeNode(node);
+  } else {
+    if (_data_list.size() >= _max_cache_size) {
+      _data_list.erase(_head->prev->key);
+      deallocateNode(_head->prev);
+      removeNode(_head->prev);
     }
 
-    _recency_cache.erase(first, last);
+    node = static_cast<Node*>(calloc(1, sizeof(Node)));
 
-    malloc_zone_pressure_relief(NULL, 0);
+    if (node) {
+      node->key = key;
+      node->value = value;
+
+      _data_list.insert({ key, node });
+    }
   }
+
+  insertNodeHead(node);
 }
 
 std::optional<ITunesSong> ArtworkCache::get_artwork(
@@ -129,15 +177,18 @@ std::optional<ITunesSong> ArtworkCache::get_artwork(
 ) {
   std::string key = generate_key(name, artist, album);
 
-  auto it = _data_cache.find(key);
+  auto element = _data_list.find(key);
 
-  if (it != _data_cache.end()) {
-    _recency_cache.erase(
-      std::find(_recency_cache.begin(), _recency_cache.end(), key));
-    _recency_cache.push_back(key);
-
-    return parse_cache_data(it->second);
+  if (element == _data_list.end()) {
+    return std::nullopt;
   }
 
-  return std::nullopt;
+  Node* node = element->second;
+
+  if (node != _head) {
+    removeNode(node);
+    insertNodeHead(node);
+  }
+
+  return parse_cache_data(node->value);
 }
