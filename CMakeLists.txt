@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.25)
 project(apple_music_rpc_cpp LANGUAGES CXX OBJCXX)
 
 set(CMAKE_CXX_STANDARD 26)
